@@ -8,6 +8,7 @@ import {
   PhotoIcon,
   VideoCameraIcon,
   XMarkIcon,
+  ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import DropdownSelect from "@/components/ui/DropdownSelect";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -584,8 +585,8 @@ export default function VideoCreatorForm() {
     
     // Check selection before starting
     let ayahText = "";
-    if (editedData && editedData.length > 0) {
-      ayahText = editedData.map(v => 
+    if (segmentationData && segmentationData.length > 0) {
+      ayahText = segmentationData.map(v => 
         v.mappings.map(m => m.translation_text).join(" ")
       ).join(" ");
     } else if (selectedSurah && startVerse && endVerse) {
@@ -781,7 +782,7 @@ export default function VideoCreatorForm() {
                     type="button"
                     onClick={handleAddNextVerse}
                     disabled={endVerse >= selectedSurah.total_verses}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-all hover:bg-primary/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-all duration-300 hover:scale-105 glow-primary hover:bg-primary/20 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     + {isArabic ? "أضف الآية التالية" : "Sonraki Ayeti Ekle"}
                   </button>
@@ -802,7 +803,7 @@ export default function VideoCreatorForm() {
                       <button
                         type="button"
                         onClick={() => setShowManualEditor(true)}
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-600 transition-all hover:bg-emerald-500/20 shadow-sm"
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-600 transition-all duration-300 hover:scale-105 hover:bg-emerald-500/20 glow-primary"
                       >
                         {isArabic ? "تعديل التقسيم" : "Bölümlemeyi Düzenle"}
                       </button>
@@ -996,7 +997,7 @@ export default function VideoCreatorForm() {
                 type="button"
                 onClick={handlePrepareAudio}
                 disabled={isPreparingAudio || isTrimming || !selectedSurah || startVerse === null || endVerse === null}
-                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 text-sm rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 flex-shrink-0"
+                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 text-sm rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-all duration-300 hover:scale-105 glow-primary disabled:opacity-50 disabled:transform-none flex items-center justify-center gap-2 flex-shrink-0"
               >
                 {isPreparingAudio ? (
                   <>

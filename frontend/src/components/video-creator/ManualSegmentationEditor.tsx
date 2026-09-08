@@ -119,10 +119,13 @@ export default function ManualSegmentationEditor({
     }
   };
 
-  const handleAutoSegmentWaqf = (verseIdx: number) => {
+  const [isWaqfLoading, setIsWaqfLoading] = useState(false);
+
+  const handleAutoSegmentWaqf = async (verseIdx: number) => {
     const newData = [...editedData];
     const mappings = newData[verseIdx].mappings;
-    const verse = verses.find(v => v.id === newData[verseIdx].ayah);
+    const seg = newData[verseIdx];
+    const verse = verses.find(v => v.id === seg.ayah);
     if (!verse) return;
     
     const allWords = verse.text.trim().split(/\s+/);
@@ -133,25 +136,46 @@ export default function ManualSegmentationEditor({
       return;
     }
 
-    const fullTranslation = mappings.map(m => m.translation_text.trim()).filter(Boolean).join(" ");
-    
-    // Try to split by punctuation in translation (logical pauses)
-    const punctuationRegex = /[,;.]\s+/;
-    let transChunks = fullTranslation.split(punctuationRegex).filter(t => t.trim().length > 0);
-    
-    // If no punctuation or too many small chunks, just split mathematically (into 2 or 3)
-    if (transChunks.length <= 1 || transChunks.length > 4) {
-      const parts = totalArabicUnits > 15 ? 3 : 2;
-      const arabicPerPart = Math.ceil(totalArabicUnits / parts);
+    setIsWaqfLoading(true);
+    try {
+      const qRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${seg.surah}:${seg.ayah}?language=tr&words=true&word_fields=text_uthmani`);
+      const qData = await qRes.json();
       
-      const newCounts: number[] = [];
-      let remaining = totalArabicUnits;
-      for (let i = 0; i < parts; i++) {
-        if (i === parts - 1) {
-          newCounts.push(remaining);
-        } else {
-          newCounts.push(arabicPerPart);
-          remaining -= arabicPerPart;
+      const waqfMarks = ["ۚ", "ۖ", "ۗ", "ۛ", "ۙ", "ۘ", "۩", "۞"];
+      const splits: number[] = [];
+      
+      if (qData.verse && qData.verse.words) {
+        const words = qData.verse.words.filter((w: any) => w.char_type_name !== "end");
+        let currentCount = 0;
+        for (let i = 0; i < words.length; i++) {
+          currentCount++;
+          const text = words[i].text_uthmani || "";
+          const hasWaqf = waqfMarks.some(mark => text.includes(mark));
+          if (hasWaqf && i !== words.length - 1) {
+            splits.push(currentCount);
+            currentCount = 0;
+          }
+        }
+        if (currentCount > 0) {
+          splits.push(currentCount);
+        }
+      }
+
+      const fullTranslation = mappings.map(m => m.translation_text.trim()).filter(Boolean).join(" ");
+      let newCounts = splits.length > 1 ? splits : [];
+      
+      if (newCounts.length === 0) {
+        // Fallback mathematical if no waqf found
+        const parts = totalArabicUnits > 15 ? 3 : 2;
+        const arabicPerPart = Math.ceil(totalArabicUnits / parts);
+        let remaining = totalArabicUnits;
+        for (let i = 0; i < parts; i++) {
+          if (i === parts - 1) {
+            newCounts.push(remaining);
+          } else {
+            newCounts.push(arabicPerPart);
+            remaining -= arabicPerPart;
+          }
         }
       }
       
@@ -165,7 +189,7 @@ export default function ManualSegmentationEditor({
           chunkTranslation = transWords.slice(currentTransWordIdx).join(" ");
         } else {
           const ratio = newCounts[i] / totalArabicUnits;
-          const wordsToTake = Math.round(transWords.length * ratio);
+          const wordsToTake = Math.max(1, Math.round(transWords.length * ratio));
           chunkTranslation = transWords.slice(currentTransWordIdx, currentTransWordIdx + wordsToTake).join(" ");
           currentTransWordIdx += wordsToTake;
         }
@@ -175,38 +199,16 @@ export default function ManualSegmentationEditor({
           translation_text: chunkTranslation
         });
       }
+      
       newData[verseIdx].mappings = newMappings;
       setEditedData(newData);
-      return;
+      showToast(isArabic ? "تم التقسيم بنجاح" : "Duraklara göre başarıyla bölündü!");
+    } catch (e) {
+      console.error(e);
+      showToast(isArabic ? "فشل الاتصال للحصول على علامات الوقف" : "Durak işaretleri alınamadı.");
+    } finally {
+      setIsWaqfLoading(false);
     }
-    
-    // If we have nice punctuation chunks, map arabic counts proportionally
-    const totalTransLength = fullTranslation.length;
-    const newCounts: number[] = [];
-    let remainingArabic = totalArabicUnits;
-    
-    for (let i = 0; i < transChunks.length; i++) {
-      if (i === transChunks.length - 1) {
-        newCounts.push(remainingArabic);
-      } else {
-        const ratio = transChunks[i].length / totalTransLength;
-        const arabicCount = Math.max(1, Math.round(totalArabicUnits * ratio));
-        newCounts.push(arabicCount);
-        remainingArabic -= arabicCount;
-      }
-    }
-    
-    const newMappings: Mapping[] = [];
-    for (let i = 0; i < transChunks.length; i++) {
-      newMappings.push({
-        part: i + 1,
-        arabic_unit_count: newCounts[i],
-        translation_text: transChunks[i].trim()
-      });
-    }
-    
-    newData[verseIdx].mappings = newMappings;
-    setEditedData(newData);
   };
 
   const handleTranslationChange = (verseIdx: number, mappingIdx: number, newText: string) => {
@@ -295,27 +297,7 @@ export default function ManualSegmentationEditor({
                           {chunkWords.join(" ")}
                         </div>
                         
-                        {mappingIdx < segResult.mappings.length - 1 && (
-                          <div className="flex justify-center mt-3 pt-3 border-t border-border/30">
-                            <div className="flex items-center bg-primary/10 rounded-full border border-primary/20 px-1 py-1 gap-1">
-                              <button 
-                                onClick={() => handleAdjustCount(verseIdx, mappingIdx, -1)}
-                                className="text-primary hover:text-white p-1.5 rounded-full hover:bg-primary transition-colors shadow-sm"
-                                title={isArabic ? "نقل كلمة للقسم التالي" : "Sonraki bölüme kelime taşı"}
-                              >
-                                <ChevronLeftIcon className="w-5 h-5" />
-                              </button>
-                              <div className="w-px h-4 bg-primary/30 mx-1"></div>
-                              <button 
-                                onClick={() => handleAdjustCount(verseIdx, mappingIdx, 1)}
-                                className="text-primary hover:text-white p-1.5 rounded-full hover:bg-primary transition-colors shadow-sm"
-                                title={isArabic ? "أخذ كلمة من القسم التالي" : "Sonraki bölümden kelime al"}
-                              >
-                                <ChevronRightIcon className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </div>
-                        )}
+
                       </div>
                     );
                   })}
@@ -323,15 +305,16 @@ export default function ManualSegmentationEditor({
                   <div className="flex justify-center mt-4 gap-3 flex-wrap">
                     <button
                       onClick={() => handleAddSection(verseIdx)}
-                      className="px-4 py-2 bg-muted/30 hover:bg-muted text-muted-foreground hover:text-foreground text-sm font-medium rounded-lg transition-colors border border-border/50 shadow-sm"
+                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 hover:text-blue-300 text-sm font-medium rounded-xl transition-all duration-300 border border-blue-500/30 glow-primary hover:scale-105"
                     >
                       {isArabic ? "+ إضافة قسم جديد" : "+ Yeni Bölüm Ekle"}
                     </button>
                     
                     <button
                       onClick={() => handleAutoSegmentWaqf(verseIdx)}
-                      className="px-4 py-2 bg-secondary/10 hover:bg-secondary/20 text-secondary-foreground text-sm font-medium rounded-lg transition-colors border border-secondary/20 shadow-sm flex items-center gap-2"
-                      title={isArabic ? "تقسيم الآية تلقائياً بناءً على علامات الوقف" : "Ayeti durak işaretlerine göre otomatik olarak böl"}
+                      disabled={isWaqfLoading}
+                      className="px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 hover:text-emerald-300 text-sm font-medium rounded-xl transition-all duration-300 border border-emerald-500/30 glow-primary hover:scale-105 flex items-center gap-2 disabled:opacity-50"
+                      title={isArabic ? "تقسيم الآية تلقائياً بناءً على علامات الوقف" : "Ayeti durak işaretlerine (Cim, Tı vb) göre otomatik olarak böl"}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 01-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 00-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.536.57a48.204 48.204 0 01-.2 4.316c1.666-.021 3.315-.126 4.939-.313a.64.64 0 01.657.643v0c0 .355-.186.676-.401.959-.221.29-.349.634-.349 1.003 0 1.036 1.007 1.875 2.25 1.875s2.25-.84 2.25-1.875c0-.369-.128-.713-.349-1.003-.215-.283-.401-.604-.401-.959v0c0-.333.27-.599.6-.584 1.48.064 2.97.106 4.47.124a.656.656 0 01.658.663v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.036 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.369 0 .713.128 1.003.349.283.215.604.401.959.401v0a.64.64 0 01.657-.643 48.39 48.39 0 014.163.3c-.186-1.613-.293-3.25-.315-4.907a.656.656 0 01.658-.663v0c.355 0 .676.186.959.401.29.221.634.349 1.003.349 1.036 0 1.875-1.007 1.875-2.25s-.84-2.25-1.875-2.25c-.369 0-.713.128-1.003.349-.283.215-.604.401-.959.401v0a.64.64 0 01-.657-.643 48.39 48.39 0 01-4.163-.3c.186-1.613.293-3.25.315-4.907z" />
