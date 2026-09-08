@@ -582,20 +582,24 @@ export default function VideoCreatorForm() {
   const handleGenerateBg = async () => {
     if (aiRetries >= 2 && bgPreview) return; // limit to 2 retries
     
+    // Check selection before starting
+    let ayahText = "";
+    if (editedData && editedData.length > 0) {
+      ayahText = editedData.map(v => 
+        v.mappings.map(m => m.translation_text).join(" ")
+      ).join(" ");
+    } else if (selectedSurah && startVerse && endVerse) {
+      ayahText = `Surah ${selectedSurah.name}, Verses ${startVerse} to ${endVerse}`;
+    }
+
+    if (!ayahText) {
+      showToast(isArabic ? "يرجى اختيار آية أولاً" : "Lütfen önce bir sure ve ayet seçin.");
+      return;
+    }
+
     setIsGeneratingBg(true);
     setRenderError("");
     try {
-      // Gather translation text of the selected Ayahs
-      let ayahText = "";
-      if (editedData && editedData.length > 0) {
-        ayahText = editedData.map(v => 
-          v.mappings.map(m => m.translation_text).join(" ")
-        ).join(" ");
-      } else if (selectedSurah && startVerse && endVerse) {
-        // Fallback: just pass the surah and ayah numbers if no translation is loaded yet
-        ayahText = `Surah ${selectedSurah.name}, Verses ${startVerse} to ${endVerse}`;
-      }
-      
       const response = await fetch("/api/ai/generate-background", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -904,7 +908,7 @@ export default function VideoCreatorForm() {
                     type="button"
                     onClick={handleGenerateBg}
                     disabled={isGeneratingBg || aiRetries >= 2}
-                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/10 px-6 py-2.5 text-sm font-medium text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/20 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/10 px-6 py-2.5 text-sm font-medium text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/20 glow-primary hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isGeneratingBg ? (
                       <>
@@ -1031,7 +1035,7 @@ export default function VideoCreatorForm() {
               type="button"
               onClick={handleGenerateVideo}
               disabled={!canGenerate}
-              className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-dark py-4 font-bold text-white shadow-lg transition-all hover:shadow-primary/25 disabled:opacity-50 sm:col-span-2"
+              className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-dark py-4 font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] glow-primary disabled:opacity-50 disabled:transform-none sm:col-span-2"
             >
               <VideoCameraIcon className="h-6 w-6" />
               {renderState === "rendering"
@@ -1062,7 +1066,7 @@ export default function VideoCreatorForm() {
                 <a
                   href={videoUrl}
                   download
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 font-bold text-white transition hover:bg-primary-dark"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 font-bold text-white transition-all duration-300 hover:scale-105 glow-primary"
                 >
                   <ArrowDownTrayIcon className="h-5 w-5" />
                   {isArabic ? "تحميل الفيديو" : "Videoyu İndir"}

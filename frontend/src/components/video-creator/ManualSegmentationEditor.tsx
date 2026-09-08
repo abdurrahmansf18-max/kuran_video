@@ -389,7 +389,7 @@ export default function ManualSegmentationEditor({
             </button>
             <button
               onClick={handleConfirm}
-              className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-medium text-white bg-primary hover:bg-primary/90 flex items-center gap-2 transition-colors shadow-lg shadow-primary/20 text-sm sm:text-base"
+              className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-medium text-white bg-primary hover:bg-primary/90 flex items-center gap-2 transition-all duration-300 hover:scale-105 glow-primary text-sm sm:text-base"
             >
               <CheckIcon className="w-5 h-5" />
               {isArabic ? "اعتماد وإكمال الفيديو" : "Onayla ve Videoyu Tamamla"}
