@@ -678,6 +678,7 @@ export async function POST(req: Request) {
 
       chromiumOptions: {
         disableWebSecurity: true,
+        enableGpu: true,
         gl: "angle",
       },
       onBrowserLog: (log) => {

@@ -53,15 +53,35 @@ export default function ManualSegmentationEditor({
   const handleAdjustCount = (verseIdx: number, mappingIdx: number, delta: number) => {
     const newData = [...editedData];
     const mappings = newData[verseIdx].mappings;
+    const verse = verses.find(v => v.id === newData[verseIdx].ayah);
+    if (!verse) return;
+    const allWords = verse.text.trim().split(/\s+/);
+    const waqfMarks = ["ۚ", "ۖ", "ۗ", "ۛ", "ۙ", "ۘ", "۩", "۞"];
+
+    // Find the starting index of the next mapping to know which word we are interacting with
+    let currentIdx = 0;
+    for (let i = 0; i <= mappingIdx; i++) {
+      currentIdx += mappings[i].arabic_unit_count;
+    }
     
     // We can only shift words between adjacent mappings
     if (delta > 0) {
       // Trying to increase current mapping's count (take from next)
       if (mappingIdx < mappings.length - 1 && mappings[mappingIdx + 1].arabic_unit_count > 0) {
-        mappings[mappingIdx].arabic_unit_count += 1;
-        mappings[mappingIdx + 1].arabic_unit_count -= 1;
+        let shiftAmount = 1;
         
-        // If the next mapping becomes empty, merge it into the current one
+        // If the word we take is NOT a Waqf, but the one after it IS, take both
+        if (currentIdx + 1 < allWords.length && waqfMarks.includes(allWords[currentIdx + 1])) {
+          shiftAmount = 2;
+        }
+        
+        if (mappings[mappingIdx + 1].arabic_unit_count < shiftAmount) {
+          shiftAmount = mappings[mappingIdx + 1].arabic_unit_count;
+        }
+
+        mappings[mappingIdx].arabic_unit_count += shiftAmount;
+        mappings[mappingIdx + 1].arabic_unit_count -= shiftAmount;
+        
         if (mappings[mappingIdx + 1].arabic_unit_count === 0) {
           mappings[mappingIdx].translation_text += (mappings[mappingIdx].translation_text ? " " : "") + mappings[mappingIdx + 1].translation_text;
           mappings.splice(mappingIdx + 1, 1);
@@ -70,10 +90,20 @@ export default function ManualSegmentationEditor({
     } else {
       // Trying to decrease current mapping's count (give to next)
       if (mappings[mappingIdx].arabic_unit_count > 0 && mappingIdx < mappings.length - 1) {
-        mappings[mappingIdx].arabic_unit_count -= 1;
-        mappings[mappingIdx + 1].arabic_unit_count += 1;
+        let shiftAmount = 1;
         
-        // If the current mapping becomes empty, merge it into the next one
+        // If the word we give is a Waqf mark, we MUST also give the word before it
+        if (waqfMarks.includes(allWords[currentIdx - 1])) {
+          shiftAmount = 2;
+        }
+        
+        if (mappings[mappingIdx].arabic_unit_count < shiftAmount) {
+          shiftAmount = mappings[mappingIdx].arabic_unit_count;
+        }
+
+        mappings[mappingIdx].arabic_unit_count -= shiftAmount;
+        mappings[mappingIdx + 1].arabic_unit_count += shiftAmount;
+        
         if (mappings[mappingIdx].arabic_unit_count === 0) {
           mappings[mappingIdx + 1].translation_text = mappings[mappingIdx].translation_text + (mappings[mappingIdx + 1].translation_text ? " " : "") + mappings[mappingIdx + 1].translation_text;
           mappings.splice(mappingIdx, 1);
@@ -100,6 +130,62 @@ export default function ManualSegmentationEditor({
     } else {
       alert(isArabic ? "القسم الأخير يحتوي على كلمة واحدة فقط. لا يمكن إنشاء قسم جديد." : "Son bölümde sadece bir kelime var. Yeni bölüm oluşturulamaz.");
     }
+  };
+
+  const handleAutoSegmentWaqf = (verseIdx: number) => {
+    const newData = [...editedData];
+    const mappings = newData[verseIdx].mappings;
+    const verse = verses.find(v => v.id === newData[verseIdx].ayah);
+    if (!verse) return;
+    const allWords = verse.text.trim().split(/\s+/);
+    const waqfMarks = ["ۚ", "ۖ", "ۗ", "ۛ", "ۙ", "ۘ", "۩", "۞"];
+    
+    const newCounts: number[] = [];
+    let currentCount = 0;
+    
+    for (let i = 0; i < allWords.length; i++) {
+      currentCount++;
+      if (waqfMarks.includes(allWords[i])) {
+        newCounts.push(currentCount);
+        currentCount = 0;
+      }
+    }
+    if (currentCount > 0) {
+      newCounts.push(currentCount);
+    }
+    
+    if (newCounts.length <= 1) {
+      alert(isArabic ? "لا توجد علامات وقف في هذه الآية للتقسيم عليها." : "Bu ayette otomatik bölünecek bir durak işareti bulunmuyor.");
+      return;
+    }
+    
+    const fullTranslation = mappings.map(m => m.translation_text.trim()).filter(Boolean).join(" ");
+    const transWords = fullTranslation.split(/\s+/);
+    const totalArabicUnits = allWords.length;
+    
+    const newMappings: Mapping[] = [];
+    let currentTransWordIdx = 0;
+    
+    for (let i = 0; i < newCounts.length; i++) {
+      let chunkTranslation = "";
+      if (i === newCounts.length - 1) {
+        chunkTranslation = transWords.slice(currentTransWordIdx).join(" ");
+      } else {
+        const ratio = newCounts[i] / totalArabicUnits;
+        const wordsToTake = Math.round(transWords.length * ratio);
+        chunkTranslation = transWords.slice(currentTransWordIdx, currentTransWordIdx + wordsToTake).join(" ");
+        currentTransWordIdx += wordsToTake;
+      }
+      
+      newMappings.push({
+        part: i + 1,
+        arabic_unit_count: newCounts[i],
+        translation_text: chunkTranslation
+      });
+    }
+    
+    newData[verseIdx].mappings = newMappings;
+    setEditedData(newData);
   };
 
   const handleTranslationChange = (verseIdx: number, mappingIdx: number, newText: string) => {
@@ -176,9 +262,9 @@ export default function ManualSegmentationEditor({
                       <div key={mappingIdx} className="flex flex-col gap-3 p-4 rounded-lg bg-card border border-border relative">
                         {/* Translation Part */}
                         <textarea
+                          readOnly
                           value={mapping.translation_text}
-                          onChange={(e) => handleTranslationChange(verseIdx, mappingIdx, e.target.value)}
-                          className="w-full bg-transparent text-primary font-medium text-sm sm:text-base border-b border-border/50 pb-2 focus:outline-none focus:border-primary resize-none"
+                          className="w-full bg-transparent text-primary font-medium text-sm sm:text-base pb-2 focus:outline-none resize-none"
                           rows={Math.max(2, Math.ceil(mapping.translation_text.length / 35))}
                           dir={isArabic ? "rtl" : "ltr"}
                         />
@@ -220,6 +306,17 @@ export default function ManualSegmentationEditor({
                       className="px-4 py-2 bg-muted/30 hover:bg-muted text-muted-foreground hover:text-foreground text-sm font-medium rounded-lg transition-colors border border-border/50 shadow-sm"
                     >
                       {isArabic ? "+ إضافة قسم جديد" : "+ Yeni Bölüm Ekle"}
+                    </button>
+                    
+                    <button
+                      onClick={() => handleAutoSegmentWaqf(verseIdx)}
+                      className="px-4 py-2 bg-secondary/10 hover:bg-secondary/20 text-secondary-foreground text-sm font-medium rounded-lg transition-colors border border-secondary/20 shadow-sm flex items-center gap-2"
+                      title={isArabic ? "تقسيم الآية تلقائياً بناءً على علامات الوقف" : "Ayeti durak işaretlerine göre otomatik olarak böl"}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 01-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 00-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.536.57a48.204 48.204 0 01-.2 4.316c1.666-.021 3.315-.126 4.939-.313a.64.64 0 01.657.643v0c0 .355-.186.676-.401.959-.221.29-.349.634-.349 1.003 0 1.036 1.007 1.875 2.25 1.875s2.25-.84 2.25-1.875c0-.369-.128-.713-.349-1.003-.215-.283-.401-.604-.401-.959v0c0-.333.27-.599.6-.584 1.48.064 2.97.106 4.47.124a.656.656 0 01.658.663v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.036 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.369 0 .713.128 1.003.349.283.215.604.401.959.401v0a.64.64 0 01.657-.643 48.39 48.39 0 014.163.3c-.186-1.613-.293-3.25-.315-4.907a.656.656 0 01.658-.663v0c.355 0 .676.186.959.401.29.221.634.349 1.003.349 1.036 0 1.875-1.007 1.875-2.25s-.84-2.25-1.875-2.25c-.369 0-.713.128-1.003.349-.283.215-.604.401-.959.401v0a.64.64 0 01-.657-.643 48.39 48.39 0 01-4.163-.3c.186-1.613.293-3.25.315-4.907z" />
+                      </svg>
+                      {isArabic ? "تقسيم بالوقف" : "Duraklara Göre Böl"}
                     </button>
                     
                     <button
