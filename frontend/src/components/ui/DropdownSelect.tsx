@@ -160,12 +160,12 @@ export default function DropdownSelect({
                       type="button"
                       onClick={() => handleSelect(option.value)}
                       className={[
-                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg",
+                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg group",
                         "text-sm transition-colors duration-150",
                         "focus:outline-none focus:bg-primary/10",
                         isSelected
-                          ? "bg-primary/10 text-primary font-medium"
-                          : "text-foreground hover:bg-primary/5",
+                          ? "bg-primary text-white font-medium shadow-md"
+                          : "text-foreground hover:bg-primary hover:text-white hover:shadow-lg",
                         isRtl ? "text-right flex-row-reverse" : "text-left",
                       ].join(" ")}
                       role="option"
@@ -177,8 +177,8 @@ export default function DropdownSelect({
                             "w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center",
                             "text-xs font-bold transition-colors",
                             isSelected
-                              ? "bg-primary text-white"
-                              : "bg-primary/10 text-primary",
+                              ? "bg-white text-primary"
+                              : "bg-primary/10 text-primary group-hover:bg-white group-hover:text-primary",
                           ].join(" ")}
                         >
                           {numberBadgeLabel ? numberBadgeLabel(option.value) : option.value}
@@ -187,14 +187,14 @@ export default function DropdownSelect({
                       <div className="flex-1 min-w-0">
                         <div className="truncate">{option.label}</div>
                         {option.subtitle && (
-                          <div className="text-xs text-foreground/50 truncate">
+                          <div className={`text-xs truncate ${isSelected ? 'text-white/80' : 'text-foreground/50 group-hover:text-white/80'}`}>
                             {option.subtitle}
                           </div>
                         )}
                       </div>
                       {showArabic && option.arabic && (
                         <span
-                          className="font-uthmanic-hafs text-lg text-primary flex-shrink-0 drop-shadow-sm"
+                          className={`font-uthmanic-hafs text-lg flex-shrink-0 drop-shadow-sm ${isSelected ? 'text-white' : 'text-primary group-hover:text-white'}`}
                           dir="rtl"
                         >
                           {option.arabic}
