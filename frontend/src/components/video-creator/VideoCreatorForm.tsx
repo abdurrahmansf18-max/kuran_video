@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import {
   ArrowDownTrayIcon,
   CloudArrowUpIcon,
@@ -80,6 +80,8 @@ export default function VideoCreatorForm() {
   const [bgPreview, setBgPreview] = useState<string | null>(null);
   const [renderState, setRenderState] = useState<RenderState>("idle");
   const [toast, setToast] = useState<{message: string} | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const showToast = (message: string) => {
     setToast({ message });
     setTimeout(() => setToast(null), 3500);
@@ -685,10 +687,13 @@ export default function VideoCreatorForm() {
             <AyahSearch 
               isArabic={isArabic} 
               onSelect={(surahId, ayahId) => {
-                setSelectedSurahId(surahId.toString());
-                setStartVerse(ayahId);
-                setEndVerse(ayahId);
-                setEditedData([]);
+                const targetSurah = surahs.find(s => s.id === surahId);
+                if (targetSurah) {
+                  setSelectedSurah(targetSurah);
+                  setStartVerse(ayahId);
+                  setEndVerse(ayahId);
+                  setEditedData([]);
+                }
               }} 
             />
 
@@ -914,23 +919,41 @@ export default function VideoCreatorForm() {
                       {isArabic ? "نستخدم الذكاء الاصطناعي لإنشاء صور لا تحتوي على أرواح أو محرمات." : "Sistem, ayet içeriğine uygun, canlı tasviri içermeyen (melek, yüz vb.) güvenli görseller üretir."}
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleGenerateBg}
-                    disabled={isGeneratingBg || aiRetries >= 2}
-                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-white transition-all duration-300 shadow-lg glow-primary hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90"
-                  >
-                    {isGeneratingBg ? (
-                      <>
-                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        {isArabic ? "جاري التوليد..." : "Oluşturuluyor..."}
-                      </>
-                    ) : (
-                      <>
-                        {isArabic ? "توليد بالذكاء الاصطناعي" : "AI ile Görsel Oluştur"}
-                      </>
-                    )}
-                  </button>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleImageUpload} 
+                    accept="image/*" 
+                    className="hidden" 
+                  />
+                  <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-2.5 text-sm font-medium text-secondary-foreground transition-all duration-300 shadow-sm border border-border/50 hover:bg-secondary/80 hover:scale-105"
+                    >
+                      <CloudArrowUpIcon className="h-4 w-4" />
+                      {isArabic ? "رفع صورة خاصة" : "Kendi Görselinizi Yükleyin"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleGenerateBg}
+                      disabled={isGeneratingBg || aiRetries >= 2}
+                      className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-white transition-all duration-300 shadow-lg glow-primary hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90"
+                    >
+                      {isGeneratingBg ? (
+                        <>
+                          <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                          {isArabic ? "جاري التوليد..." : "Oluşturuluyor..."}
+                        </>
+                      ) : (
+                        <>
+                          <PhotoIcon className="h-4 w-4" />
+                          {isArabic ? "توليد بالذكاء الاصطناعي" : "AI ile Görsel Oluştur"}
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
