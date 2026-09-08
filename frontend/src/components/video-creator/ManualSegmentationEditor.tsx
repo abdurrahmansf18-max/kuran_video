@@ -50,88 +50,6 @@ export default function ManualSegmentationEditor({
 
   if (!isOpen) return null;
 
-  const handleAdjustCount = (verseIdx: number, mappingIdx: number, delta: number) => {
-    const newData = [...editedData];
-    const mappings = newData[verseIdx].mappings;
-    const verse = verses.find(v => v.id === newData[verseIdx].ayah);
-    if (!verse) return;
-    const allWords = verse.text.trim().split(/\s+/);
-    const waqfMarks = ["ۚ", "ۖ", "ۗ", "ۛ", "ۙ", "ۘ", "۩", "۞"];
-
-    // Find the starting index of the next mapping to know which word we are interacting with
-    let currentIdx = 0;
-    for (let i = 0; i <= mappingIdx; i++) {
-      currentIdx += mappings[i].arabic_unit_count;
-    }
-    
-    // We can only shift words between adjacent mappings
-    if (delta > 0) {
-      // Trying to increase current mapping's count (take from next)
-      if (mappingIdx < mappings.length - 1 && mappings[mappingIdx + 1].arabic_unit_count > 0) {
-        let shiftAmount = 1;
-        
-        // If the word we take is NOT a Waqf, but the one after it IS, take both
-        if (currentIdx + 1 < allWords.length && waqfMarks.includes(allWords[currentIdx + 1])) {
-          shiftAmount = 2;
-        }
-        
-        if (mappings[mappingIdx + 1].arabic_unit_count < shiftAmount) {
-          shiftAmount = mappings[mappingIdx + 1].arabic_unit_count;
-        }
-
-        mappings[mappingIdx].arabic_unit_count += shiftAmount;
-        mappings[mappingIdx + 1].arabic_unit_count -= shiftAmount;
-        
-        if (mappings[mappingIdx + 1].arabic_unit_count === 0) {
-          mappings[mappingIdx].translation_text += (mappings[mappingIdx].translation_text ? " " : "") + mappings[mappingIdx + 1].translation_text;
-          mappings.splice(mappingIdx + 1, 1);
-        }
-      }
-    } else {
-      // Trying to decrease current mapping's count (give to next)
-      if (mappings[mappingIdx].arabic_unit_count > 0 && mappingIdx < mappings.length - 1) {
-        let shiftAmount = 1;
-        
-        // If the word we give is a Waqf mark, we MUST also give the word before it
-        if (waqfMarks.includes(allWords[currentIdx - 1])) {
-          shiftAmount = 2;
-        }
-        
-        if (mappings[mappingIdx].arabic_unit_count < shiftAmount) {
-          shiftAmount = mappings[mappingIdx].arabic_unit_count;
-        }
-
-        mappings[mappingIdx].arabic_unit_count -= shiftAmount;
-        mappings[mappingIdx + 1].arabic_unit_count += shiftAmount;
-        
-        if (mappings[mappingIdx].arabic_unit_count === 0) {
-          mappings[mappingIdx + 1].translation_text = mappings[mappingIdx].translation_text + (mappings[mappingIdx + 1].translation_text ? " " : "") + mappings[mappingIdx + 1].translation_text;
-          mappings.splice(mappingIdx, 1);
-        }
-      }
-    }
-    
-    setEditedData(newData);
-  };
-
-  const handleAddSection = (verseIdx: number) => {
-    const newData = [...editedData];
-    const mappings = newData[verseIdx].mappings;
-    const lastMapping = mappings[mappings.length - 1];
-    
-    if (lastMapping && lastMapping.arabic_unit_count > 1) {
-      lastMapping.arabic_unit_count -= 1;
-      mappings.push({
-        part: mappings.length + 1,
-        translation_text: "",
-        arabic_unit_count: 1
-      });
-      setEditedData(newData);
-    } else {
-      alert(isArabic ? "القسم الأخير يحتوي على كلمة واحدة فقط. لا يمكن إنشاء قسم جديد." : "Son bölümde sadece bir kelime var. Yeni bölüm oluşturulamaz.");
-    }
-  };
-
   const handleAutoSegmentWaqf = (verseIdx: number) => {
     const newData = [...editedData];
     const mappings = newData[verseIdx].mappings;
@@ -274,39 +192,11 @@ export default function ManualSegmentationEditor({
                           {chunkWords.join(" ")}
                         </div>
                         
-                        {/* Controls - Positioned elegantly at the bottom center of the section */}
-                        {mappingIdx < segResult.mappings.length - 1 && (
-                          <div className="flex justify-center mt-3 pt-3 border-t border-border/30">
-                            <div className="flex items-center bg-muted/30 rounded-full border border-border px-1 py-1 gap-1">
-                              <button 
-                                onClick={() => handleAdjustCount(verseIdx, mappingIdx, -1)}
-                                className="text-muted-foreground hover:text-foreground p-1.5 rounded-full hover:bg-background transition-colors shadow-sm"
-                                title={isArabic ? "نقل كلمة للقسم التالي" : "Sonraki bölüme kelime taşı"}
-                              >
-                                <ChevronLeftIcon className="w-5 h-5" />
-                              </button>
-                              <div className="w-px h-4 bg-border mx-1"></div>
-                              <button 
-                                onClick={() => handleAdjustCount(verseIdx, mappingIdx, 1)}
-                                className="text-muted-foreground hover:text-foreground p-1.5 rounded-full hover:bg-background transition-colors shadow-sm"
-                                title={isArabic ? "أخذ كلمة من القسم التالي" : "Sonraki bölümden kelime al"}
-                              >
-                                <ChevronRightIcon className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </div>
-                        )}
                       </div>
                     );
                   })}
                   
                   <div className="flex justify-center mt-4 gap-3 flex-wrap">
-                    <button
-                      onClick={() => handleAddSection(verseIdx)}
-                      className="px-4 py-2 bg-muted/30 hover:bg-muted text-muted-foreground hover:text-foreground text-sm font-medium rounded-lg transition-colors border border-border/50 shadow-sm"
-                    >
-                      {isArabic ? "+ إضافة قسم جديد" : "+ Yeni Bölüm Ekle"}
-                    </button>
                     
                     <button
                       onClick={() => handleAutoSegmentWaqf(verseIdx)}
