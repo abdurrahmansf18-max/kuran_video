@@ -159,6 +159,15 @@ export default function ManualSegmentationEditor({
         if (currentCount > 0) {
           splits.push(currentCount);
         }
+        
+        // Ensure total arabic words matched exactly, adjusting the last segment
+        if (splits.length > 0) {
+          let sumBeforeLast = 0;
+          for (let j = 0; j < splits.length - 1; j++) {
+            sumBeforeLast += splits[j];
+          }
+          splits[splits.length - 1] = Math.max(1, totalArabicUnits - sumBeforeLast);
+        }
       }
 
       const fullTranslation = mappings.map(m => m.translation_text.trim()).filter(Boolean).join(" ");
@@ -305,7 +314,7 @@ export default function ManualSegmentationEditor({
                   <div className="flex justify-center mt-4 gap-3 flex-wrap">
                     <button
                       onClick={() => handleAddSection(verseIdx)}
-                      className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 hover:text-blue-300 text-sm font-medium rounded-xl transition-all duration-300 border border-blue-500/30 glow-primary hover:scale-105"
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-all duration-300 shadow-lg glow-primary hover:scale-105"
                     >
                       {isArabic ? "+ إضافة قسم جديد" : "+ Yeni Bölüm Ekle"}
                     </button>
@@ -313,7 +322,7 @@ export default function ManualSegmentationEditor({
                     <button
                       onClick={() => handleAutoSegmentWaqf(verseIdx)}
                       disabled={isWaqfLoading}
-                      className="px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 hover:text-emerald-300 text-sm font-medium rounded-xl transition-all duration-300 border border-emerald-500/30 glow-primary hover:scale-105 flex items-center gap-2 disabled:opacity-50"
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-xl transition-all duration-300 shadow-lg glow-primary hover:scale-105 flex items-center gap-2 disabled:opacity-50"
                       title={isArabic ? "تقسيم الآية تلقائياً بناءً على علامات الوقف" : "Ayeti durak işaretlerine (Cim, Tı vb) göre otomatik olarak böl"}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
@@ -347,7 +356,7 @@ export default function ManualSegmentationEditor({
                         }
                         setEditedData(newData);
                       }}
-                      className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium rounded-lg transition-colors border border-primary/20 shadow-sm flex items-center gap-2"
+                      className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium rounded-xl transition-all duration-300 shadow-lg glow-primary hover:scale-105 flex items-center gap-2"
                       title={isArabic ? "توزيع النص المترجم تلقائياً بناءً على عدد الكلمات العربية" : "Çeviri metnini Arapça kelime sayısına göre orantılı olarak otomatik dağıt"}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
