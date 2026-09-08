@@ -28,36 +28,36 @@
     /* ─── Quran Font ─── */
     --font-uthmani: 'KFGQPC Uthman Taha Naskh', 'Amiri Quran', 'Scheherazade New', 'Noto Naskh Arabic', serif;
 
-    /* Brand */
-    --primary: #C29B4D;
-    --primary-dark: #A38038;
-    --primary-light: #E1C078;
-    --primary-rgb: 194, 155, 77;
+    /* Brand: Emerald Green */
+    --primary: #065F46;
+    --primary-dark: #044E39;
+    --primary-light: #10B981;
+    --primary-rgb: 6, 95, 70;
 
-    /* Surfaces */
-    --background: #FDFBF7;
+    /* Surfaces: Pearl Gray */
+    --background: #F8FAFC;
     --surface: #FFFFFF;
-    --surface-2: #F7F5F0;
+    --surface-2: #F1F5F9;
 
-    /* Mushaf paper */
-    --mushaf-bg: #f8f0d8;
-    --mushaf-border: #c9a84c;
-    --mushaf-border-light: #dfc77a;
-    --mushaf-frame: #e8d490;
+    /* Mushaf paper (Pearl Gray aesthetic) */
+    --mushaf-bg: #F8FAFC;
+    --mushaf-border: #94A3B8;
+    --mushaf-border-light: #CBD5E1;
+    --mushaf-frame: #E2E8F0;
 
     /* Text */
-    --foreground: #1C1917;
-    --foreground-muted: #78716C;
-    --foreground-subtle: #A8A29E;
+    --foreground: #0F172A;
+    --foreground-muted: #64748B;
+    --foreground-subtle: #94A3B8;
 
     /* Borders */
-    --border: #E7E5E4;
-    --border-strong: #D6D3D1;
+    --border: #E2E8F0;
+    --border-strong: #CBD5E1;
 
     /* Accent / Semantic */
-    --accent-green: #15803D;
-    --accent-green-bg: #DCFCE7;
-    --accent-gold-bg: #FEF3C7;
+    --accent-green: #10B981;
+    --accent-green-bg: #D1FAE5;
+    --accent-gold-bg: #F1F5F9;
 
     /* Spacing scale */
     --radius-sm: 0.5rem;
@@ -76,29 +76,29 @@
 
   .dark {
     /* Surfaces */
-    --background: #0C0A09;
-    --surface: #1C1917;
-    --surface-2: #292524;
+    --background: #0F172A;
+    --surface: #1E293B;
+    --surface-2: #334155;
 
     /* Mushaf paper (dark) */
-    --mushaf-bg: #1a1812;
-    --mushaf-border: #8a7230;
-    --mushaf-border-light: #6a5828;
-    --mushaf-frame: #3d3420;
+    --mushaf-bg: #0F172A;
+    --mushaf-border: #475569;
+    --mushaf-border-light: #334155;
+    --mushaf-frame: #1E293B;
 
     /* Text */
-    --foreground: #FAFAF9;
-    --foreground-muted: #A8A29E;
-    --foreground-subtle: #78716C;
+    --foreground: #F8FAFC;
+    --foreground-muted: #94A3B8;
+    --foreground-subtle: #64748B;
 
     /* Borders */
-    --border: #292524;
-    --border-strong: #44403C;
+    --border: #334155;
+    --border-strong: #475569;
 
     /* Accent */
-    --accent-green: #4ADE80;
-    --accent-green-bg: #14532D;
-    --accent-gold-bg: #451A03;
+    --accent-green: #34D399;
+    --accent-green-bg: #064E3B;
+    --accent-gold-bg: #0F172A;
 
     /* Shadows */
     --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.2);
