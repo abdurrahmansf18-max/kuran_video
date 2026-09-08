@@ -852,26 +852,6 @@ export default function VideoCreatorForm() {
                     {isArabic ? "اختر صورة" : "Resim Seç"}
                     <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                   </label>
-                  <button
-                    type="button"
-                    onClick={handleGenerateBg}
-                    disabled={isGeneratingBg}
-                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/10 px-6 py-2.5 text-sm font-medium text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/20 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isGeneratingBg ? (
-                      <>
-                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        {isArabic ? "جاري التوليد..." : "Oluşturuluyor..."}
-                      </>
-                    ) : (
-                      <>
-                        {isArabic ? "توليد بالذكاء الاصطناعي" : "AI ile Arka Plan Oluştur"}
-                      </>
-                    )}
-                  </button>
                 </div>
               )}
             </div>
@@ -888,32 +868,6 @@ export default function VideoCreatorForm() {
             </h2>
 
             <div className="flex flex-col gap-4">
-              <div className="flex p-1 bg-primary/5 rounded-xl border border-primary/10 mb-2 relative">
-                <button
-                  type="button"
-                  onClick={() => setAudioSourceMode("reciter")}
-                  className={`flex-1 flex items-center justify-center py-2.5 px-4 text-sm font-medium rounded-lg transition-all duration-300 relative z-10 ${
-                    audioSourceMode === "reciter" 
-                      ? "bg-background text-primary shadow-sm border border-primary/20" 
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {isArabic ? "اختر قارئ" : "Kari Seç"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAudioSourceMode("custom")}
-                  className={`flex-1 flex items-center justify-center py-2.5 px-4 text-sm font-medium rounded-lg transition-all duration-300 relative z-10 ${
-                    audioSourceMode === "custom" 
-                      ? "bg-background text-primary shadow-sm border border-primary/20" 
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {isArabic ? "رفع ملف صوتي" : "Kendi Sesini Yükle"}
-                </button>
-              </div>
-
-              {audioSourceMode === "reciter" ? (
                 <DropdownSelect
                   placeholder={isArabic ? "مشاري راشد العفاسي" : "Mishary Rashed Alafasy"}
                   options={[
@@ -936,41 +890,6 @@ export default function VideoCreatorForm() {
                   }}
                   isRtl={isArabic}
                 />
-              ) : (
-                <div className="w-full">
-                   {customAudio ? (
-                     <>
-                       <div className={`w-full flex items-center justify-between gap-3 rounded-2xl border border-border bg-background px-5 py-3.5 shadow-sm text-sm font-medium transition-all duration-300 ${isArabic ? 'text-right' : 'text-left'}`} dir={isArabic ? 'rtl' : 'ltr'}>
-                          <div className="flex items-center gap-3 overflow-hidden">
-                            <MusicalNoteIcon className="h-5 w-5 text-primary flex-shrink-0" />
-                            <span className="truncate">
-                              {customAudio.name}
-                            </span>
-                          </div>
-                          <button 
-                            type="button" 
-                            onClick={removeCustomAudio}
-                            className="text-foreground/40 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition-colors flex-shrink-0"
-                            title={isArabic ? "حذف" : "Sil"}
-                          >
-                             <XMarkIcon className="h-5 w-5" />
-                          </button>
-                       </div>
-                       <audio controls src={URL.createObjectURL(customAudio)} className="w-full mt-3 h-10 rounded-lg outline-none" />
-                     </>
-                   ) : (
-                     <label className={`w-full flex items-center justify-between gap-3 rounded-2xl border border-border bg-background px-5 py-3.5 shadow-sm hover:border-primary/30 hover:shadow-md text-sm font-medium transition-all duration-300 cursor-pointer ${isArabic ? 'text-right' : 'text-left'}`} dir={isArabic ? 'rtl' : 'ltr'}>
-                        <span className="opacity-50 truncate">
-                          {isArabic ? "تصفح لاختيار ملف صوتي مخصص..." : "Özel bir ses dosyası seçin..."}
-                        </span>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                           <CloudArrowUpIcon className="w-5 h-5 text-foreground/40" />
-                        </div>
-                        <input type="file" accept="audio/*" className="hidden" onChange={handleCustomAudioUpload} />
-                     </label>
-                   )}
-                </div>
-              )}
             </div>
           </section>
 

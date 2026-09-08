@@ -42,11 +42,11 @@ export default function Navbar() {
             <Link
               href="/"
               className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
-              aria-label="Kuran Nuru — Ana sayfaya git"
+              aria-label="Huzur Ayeti — Ana sayfaya git"
             >
               <div className="relative w-16 h-16 lg:w-20 lg:h-20 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
                 <Image
-                  src="/kuran-nuru-logo.png"
+                  src="/huzur-ayeti-logo.jpeg"
                   alt=""
                   fill
                   className="object-contain drop-shadow-sm rounded-md mix-blend-multiply dark:mix-blend-normal"
@@ -54,7 +54,7 @@ export default function Navbar() {
                 />
               </div>
               <span className="text-xl font-bold tracking-tight text-gradient-gold whitespace-nowrap" dir="ltr">
-                Kuran Nuru
+                Huzur Ayeti
               </span>
             </Link>
 

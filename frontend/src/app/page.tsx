@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import VideoCreatorForm from "@/components/video-creator/VideoCreatorForm";
 
 export const metadata: Metadata = {
-  title: "Kuran Nuru",
-  description: "Kuran Nuru",
+  title: "Huzur Ayeti",
+  description: "Huzur Ayeti",
 };
 
 export default function VideoCreatorPage() {

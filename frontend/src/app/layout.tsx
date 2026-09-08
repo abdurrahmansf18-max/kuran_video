@@ -34,8 +34,8 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://kurannuru.com"),
   title: {
-    default: "Kuran Nuru — Dijital Kuran Uygulaması",
-    template: "%s | Kuran Nuru",
+    default: "Huzur Ayeti — Dijital Kuran Uygulaması",
+    template: "%s | Huzur Ayeti",
   },
   description:
     "Kuran-ı Kerim'i zarif tipografi, güzel tilavetler ve Türkçe çevirilerle okuyun. 114 Sure, 6236 Ayet.",
@@ -51,8 +51,8 @@ export const metadata: Metadata = {
     "Hafız",
     "Tilevet",
   ],
-  authors: [{ name: "Kuran Nuru" }],
-  creator: "Kuran Nuru",
+  authors: [{ name: "Huzur Ayeti" }],
+  creator: "Huzur Ayeti",
   robots: {
     index: true,
     follow: true,
@@ -63,8 +63,8 @@ export const metadata: Metadata = {
     locale: "tr_TR",
     alternateLocale: "ar_SA",
     url: "https://kurannuru.com",
-    siteName: "Kuran Nuru",
-    title: "Kuran Nuru — Dijital Kuran Uygulaması",
+    siteName: "Huzur Ayeti",
+    title: "Huzur Ayeti — Dijital Kuran Uygulaması",
     description:
       "Kuran-ı Kerim'i zarif tipografi ve Türkçe çeviriyle okuyun.",
     images: [
@@ -72,13 +72,13 @@ export const metadata: Metadata = {
         url: "/kuran-nuru-logo.png",
         width: 512,
         height: 512,
-        alt: "Kuran Nuru — Dijital Kuran Uygulaması",
+        alt: "Huzur Ayeti — Dijital Kuran Uygulaması",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kuran Nuru",
+    title: "Huzur Ayeti",
     description: "Dijital Kuran Uygulaması",
     images: ["/kuran-nuru-logo.png"],
   },
