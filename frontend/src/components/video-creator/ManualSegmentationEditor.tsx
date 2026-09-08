@@ -214,12 +214,46 @@ export default function ManualSegmentationEditor({
                     );
                   })}
                   
-                  <div className="flex justify-center mt-4">
+                  <div className="flex justify-center mt-4 gap-3 flex-wrap">
                     <button
                       onClick={() => handleAddSection(verseIdx)}
                       className="px-4 py-2 bg-muted/30 hover:bg-muted text-muted-foreground hover:text-foreground text-sm font-medium rounded-lg transition-colors border border-border/50 shadow-sm"
                     >
                       {isArabic ? "+ إضافة قسم جديد" : "+ Yeni Bölüm Ekle"}
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        const newData = [...editedData];
+                        const mappings = newData[verseIdx].mappings;
+                        const fullTranslation = mappings.map(m => m.translation_text.trim()).filter(Boolean).join(" ");
+                        if (!fullTranslation) return;
+                        
+                        const transWords = fullTranslation.split(/\s+/);
+                        const totalArabicUnits = mappings.reduce((sum, m) => sum + m.arabic_unit_count, 0);
+                        
+                        if (totalArabicUnits === 0 || transWords.length === 0) return;
+
+                        let currentTransWordIdx = 0;
+                        for (let i = 0; i < mappings.length; i++) {
+                          if (i === mappings.length - 1) {
+                            mappings[i].translation_text = transWords.slice(currentTransWordIdx).join(" ");
+                          } else {
+                            const ratio = mappings[i].arabic_unit_count / totalArabicUnits;
+                            const wordsToTake = Math.round(transWords.length * ratio);
+                            mappings[i].translation_text = transWords.slice(currentTransWordIdx, currentTransWordIdx + wordsToTake).join(" ");
+                            currentTransWordIdx += wordsToTake;
+                          }
+                        }
+                        setEditedData(newData);
+                      }}
+                      className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium rounded-lg transition-colors border border-primary/20 shadow-sm flex items-center gap-2"
+                      title={isArabic ? "توزيع النص المترجم تلقائياً بناءً على عدد الكلمات العربية" : "Çeviri metnini Arapça kelime sayısına göre orantılı olarak otomatik dağıt"}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                      </svg>
+                      {isArabic ? "توزيع الترجمة" : "Çeviriyi Dağıt"}
                     </button>
                   </div>
                 </div>
