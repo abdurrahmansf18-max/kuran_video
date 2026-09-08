@@ -21,7 +21,7 @@ services:
     build:
       context: ./backend
     ports:
-      - "8001:8000"
+      - "8002:8000"
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/kurannuru
       - CORS_ORIGINS=*
