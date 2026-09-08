@@ -557,28 +557,22 @@ export function QuranVideo({
                   ? d - chunkStartFrame
                   : Math.round((mapping.arabic_unit_count / totalUnits) * d);
 
-                if ((!globalAudioPath || isAudioExtracted) && verse.wordTimings && verse.wordTimings.length > 0) {
-                  // Since verse.text contains PUA codes and verse.wordTimings contains standard Arabic, string matching fails.
-                  // We map the PUA word indices proportionally to the whisper word indices.
+                if ((!globalAudioPath || isAudioExtracted) && mapping.chunkStartFrame !== undefined && mapping.chunkDurationInFrames !== undefined) {
+                  chunkStartFrame = mapping.chunkStartFrame;
+                  chunkDuration = mapping.chunkDurationInFrames;
+                } else if ((!globalAudioPath || isAudioExtracted) && verse.wordTimings && verse.wordTimings.length > 0) {
+                  // Fallback for older renders or if backend mapping failed
                   const startFraction = previousUnits / totalUnits;
                   const endFraction = (previousUnits + mapping.arabic_unit_count) / totalUnits;
-                  
                   const startW = Math.floor(startFraction * verse.wordTimings.length);
                   let endW = Math.floor(endFraction * verse.wordTimings.length) - 1;
-                  
-                  // Ensure bounds
                   if (endW >= verse.wordTimings.length) endW = verse.wordTimings.length - 1;
                   if (endW < startW) endW = startW;
-                  
                   if (startW < verse.wordTimings.length && endW < verse.wordTimings.length) {
                     const startMs = verse.wordTimings[startW].start;
-                    const nextStartMs = endW + 1 < verse.wordTimings.length 
-                      ? verse.wordTimings[endW + 1].start 
-                      : verse.wordTimings[endW].end;
-                      
-                    chunkStartFrame = Math.round((startMs / 1000) * 30); // FPS is 30
+                    const nextStartMs = endW + 1 < verse.wordTimings.length ? verse.wordTimings[endW + 1].start : verse.wordTimings[endW].end;
+                    chunkStartFrame = Math.round((startMs / 1000) * 30);
                     chunkDuration = Math.max(1, Math.round(((nextStartMs - startMs) / 1000) * 30));
-
                     if (idx === verse.mappings!.length - 1) {
                       chunkDuration = Math.max(1, d - chunkStartFrame);
                     }

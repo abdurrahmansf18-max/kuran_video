@@ -2,6 +2,8 @@ export type VerseMapping = {
   part: number;
   translation_text: string;
   arabic_unit_count: number;
+  chunkStartFrame?: number;
+  chunkDurationInFrames?: number;
 };
 
 export type WordTiming = {

@@ -18,15 +18,23 @@ export async function POST(req: Request) {
 
     let response: Response | null = null;
     
-    // Add variations based on retry count so the user gets different results
-    const styleModifiers = [
-      "cinematic lighting, minimalist, very dark, deep navy and indigo tones",
-      "ethereal, misty landscape, dark moody atmosphere, soft glow",
-      "abstract geometric islamic patterns blending with nature, dark aesthetic, peaceful"
+    // Beautiful, vibrant nature themes
+    const natureThemes = [
+      "Breathtaking tropical beach with crystal clear turquoise water, gentle waves, and white sand, sunny day",
+      "Lush green magical forest with sunlight filtering through the canopy, vibrant ferns and moss, peaceful",
+      "Stunning mountain river flowing rapidly, crystal clear water, surrounded by vibrant autumn colored trees",
+      "Milky way night sky over a calm mirror-like lake, millions of stars, deep space, glowing, tranquil",
+      "Serene winter landscape with snow-covered pine trees, gentle snowfall, golden hour sunset lighting",
+      "Beautiful spring meadow filled with colorful blooming wildflowers, rolling green hills, bright blue sky",
+      "Majestic waterfall cascading down a rocky cliff in a dense vibrant tropical jungle",
+      "Peaceful sunset over the ocean, sky painted in vibrant orange, pink, and purple hues, gentle waves",
+      "Misty morning in a dense redwood forest, ethereal lighting, tranquil and calming atmosphere, vibrant nature"
     ];
-    const modifier = styleModifiers[retryCount % styleModifiers.length];
     
-    const prompt = `Abstract nature background inspired by the meaning: "${ayahText}". ${modifier}. CRITICAL RULES: NO humans, NO animals, NO faces, NO prophets, NO angels, NO text, NO watermarks. Beautiful composition, suitable for vertical video background, 4k resolution.`;
+    // Pick a completely random theme, disregarding the ayah text
+    const randomTheme = natureThemes[Math.floor(Math.random() * natureThemes.length)];
+    
+    const prompt = `${randomTheme}. CRITICAL RULES: NO humans, NO animals, NO faces, NO architecture, NO text, NO watermarks. National geographic photography, 8k resolution, photorealistic, highly detailed, vibrant colors, stunning cinematic lighting, vertical composition.`;
 
     try {
       const encodedPrompt = encodeURIComponent(prompt);

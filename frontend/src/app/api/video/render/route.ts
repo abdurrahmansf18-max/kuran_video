@@ -496,6 +496,24 @@ export async function POST(req: Request) {
       }
     }
 
+    // Fetch precise quran words to map PUA codes to normal Arabic words
+    let quranWordsData: any = null;
+    try {
+      const qRes = await fetch(`https://api.quran.com/api/v4/verses/by_chapter/${surahId}?language=tr&words=true&word_fields=text_uthmani,code_v2&per_page=300`);
+      if (qRes.ok) {
+        quranWordsData = await qRes.json();
+      }
+    } catch (e) {
+      console.log("Failed to fetch quranWordsData", e);
+    }
+
+    const cleanArabic = (str: string) => {
+      return (str || "")
+        .replace(/[\u0617-\u061A\u064B-\u0652\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED]/g, "") // remove tashkeel
+        .replace(/[^\w\s\u0600-\u06FF]/g, "") // remove punctuation
+        .replace(/\s+/g, ""); // remove spaces
+    };
+
     // Calculate total character count for proportional duration assignment if using custom audio
     let totalCharsAllVerses = 0;
     if (globalAudioPath && !apiExtracted) {
@@ -583,6 +601,129 @@ export async function POST(req: Request) {
             for (let w of wordTimings) {
               w.start -= verseStartMs;
               w.end -= verseStartMs;
+            }
+          }
+        }
+
+        // PERFECT TIMING SYNC:
+        // We know exactly how many PUA codes are in each mapping (arabic_unit_count).
+        // We map PUA chunks -> quranWords -> Whisper wordTimings using string matching!
+        if (matchingSegmentation && matchingSegmentation.mappings && wordTimings && wordTimings.length > 0 && quranWordsData) {
+          const apiVerse = quranWordsData.verses.find((v: any) => parseInt(v.verse_key.split(":")[1]) === verse.id);
+          if (apiVerse && apiVerse.words) {
+            const quranWords = apiVerse.words.filter((w: any) => w.char_type_name !== "end");
+            
+            // Align Whisper to QuranWords
+            const alignedTimings = new Array(quranWords.length).fill(null);
+            let tIdx = 0;
+            let matchedCount = 0;
+            
+            for (let i = 0; i < quranWords.length; i++) {
+              const wordClean = cleanArabic(quranWords[i].text_uthmani);
+              if (!wordClean) continue;
+              
+              for (let lookAhead = 0; lookAhead <= 2; lookAhead++) {
+                if (tIdx + lookAhead < wordTimings.length) {
+                  const timingClean = cleanArabic(wordTimings[tIdx + lookAhead].w);
+                  if (timingClean === wordClean || timingClean.includes(wordClean) || wordClean.includes(timingClean)) {
+                    let matchedTiming = { ...wordTimings[tIdx + lookAhead] };
+                    let consumed = 1;
+                    
+                    let accumulatedText = timingClean;
+                    while (accumulatedText.length < wordClean.length && tIdx + lookAhead + consumed < wordTimings.length) {
+                      const nextFragmentClean = cleanArabic(wordTimings[tIdx + lookAhead + consumed].w);
+                      const remainingExpected = wordClean.substring(accumulatedText.length);
+                      if (remainingExpected.startsWith(nextFragmentClean) || nextFragmentClean.includes(remainingExpected)) {
+                        accumulatedText += nextFragmentClean;
+                        matchedTiming.end = wordTimings[tIdx + lookAhead + consumed].end;
+                        consumed++;
+                      } else {
+                        break;
+                      }
+                    }
+                    
+                    alignedTimings[i] = matchedTiming;
+                    tIdx += lookAhead + consumed;
+                    matchedCount++;
+                    break;
+                  }
+                }
+              }
+            }
+
+            // Assign timings to mappings
+            let currentPuaCount = 0;
+            let qIdx = 0;
+            
+            for (let mIdx = 0; mIdx < matchingSegmentation.mappings.length; mIdx++) {
+              const mapping = matchingSegmentation.mappings[mIdx];
+              const targetPua = currentPuaCount + mapping.arabic_unit_count;
+              
+              const startQIdx = qIdx;
+              while (qIdx < quranWords.length && currentPuaCount < targetPua) {
+                const numCodes = [...(quranWords[qIdx].code_v2 || "").trim()].length;
+                currentPuaCount += numCodes;
+                qIdx++;
+              }
+              const endQIdx = Math.max(startQIdx, qIdx - 1);
+              
+              // Fallback to proportional if string matching failed for these words
+              let startMs = 0;
+              let nextStartMs = 0;
+              
+              if (matchedCount > 0) {
+                // Find nearest valid aligned timing for start
+                let foundStart = false;
+                for (let j = startQIdx; j < quranWords.length; j++) {
+                  if (alignedTimings[j]) {
+                    startMs = alignedTimings[j].start;
+                    foundStart = true;
+                    break;
+                  }
+                }
+                
+                // Find nearest valid aligned timing for end
+                let foundEnd = false;
+                for (let j = endQIdx; j >= startQIdx; j--) {
+                  if (alignedTimings[j]) {
+                    nextStartMs = alignedTimings[j].end;
+                    foundEnd = true;
+                    break;
+                  }
+                }
+                
+                // Look ahead for actual start of next word if possible
+                for (let j = endQIdx + 1; j < quranWords.length; j++) {
+                  if (alignedTimings[j]) {
+                    nextStartMs = alignedTimings[j].start;
+                    break;
+                  }
+                }
+
+                if (!foundStart || !foundEnd) {
+                   // Fallback
+                   const startW = Math.floor((startQIdx / quranWords.length) * wordTimings.length);
+                   let endW = Math.floor((endQIdx / quranWords.length) * wordTimings.length);
+                   if (endW >= wordTimings.length) endW = wordTimings.length - 1;
+                   startMs = wordTimings[startW]?.start || 0;
+                   nextStartMs = endW + 1 < wordTimings.length ? wordTimings[endW + 1].start : wordTimings[endW]?.end || 0;
+                }
+              } else {
+                 const startW = Math.floor((startQIdx / quranWords.length) * wordTimings.length);
+                 let endW = Math.floor((endQIdx / quranWords.length) * wordTimings.length);
+                 if (endW >= wordTimings.length) endW = wordTimings.length - 1;
+                 startMs = wordTimings[startW]?.start || 0;
+                 nextStartMs = endW + 1 < wordTimings.length ? wordTimings[endW + 1].start : wordTimings[endW]?.end || 0;
+              }
+
+              // Calculate start and duration
+              mapping.chunkStartFrame = Math.round((startMs / 1000) * FPS);
+              mapping.chunkDurationInFrames = Math.max(1, Math.round(((nextStartMs - startMs) / 1000) * FPS));
+              
+              if (mIdx === matchingSegmentation.mappings.length - 1) {
+                // Ensure last chunk extends to end of verse duration
+                mapping.chunkDurationInFrames = Math.max(1, durationInFrames - mapping.chunkStartFrame);
+              }
             }
           }
         }
