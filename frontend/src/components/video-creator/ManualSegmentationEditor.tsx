@@ -141,7 +141,7 @@ export default function ManualSegmentationEditor({
       const qRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${seg.surah}:${seg.ayah}?language=tr&words=true&word_fields=text_uthmani,code_v2`);
       const qData = await qRes.json();
       
-      const waqfMarks = ["ۚ", "ۖ", "ۗ", "ۛ", "ۙ", "ۘ", "۩", "۞"];
+      const waqfMarks = ["ۚ", "ۗ", "ۛ", "ۘ", "۩", "۞"];
       const splits: number[] = [];
       
       if (qData.verse && qData.verse.words) {

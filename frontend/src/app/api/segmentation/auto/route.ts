@@ -304,57 +304,82 @@ export async function POST(req: Request) {
       }
     }
 
-    // If all attempts failed, use native JS regex fallback splitting as requested by user
-    console.log(`[Auto Segmentation] All ${MAX_RETRIES} attempts failed for Surah ${surah} Ayah ${ayah}. Using native regex split fallback.`);
+    console.log(`[Auto Segmentation] All attempts failed for Surah ${surah} Ayah ${ayah}. Using Waqf-based fallback.`);
     
-    // Split by punctuation marks (. ? !) optionally followed by quotes
-    const segments = translation.split(/(?<=[.?!]["']?)\s+/).filter((s: string) => s.trim().length > 0);
-
-    // Use the PUA word count from quran.json as the source of truth
-    // This ensures alignment with QuranVideo.tsx which uses verse.text.split(/\s+/)
     const localSurahs = quranData as any[];
     const localSurah = localSurahs.find((s: any) => s.id === surah);
     const localVerse = localSurah?.verses?.find((v: any) => v.id === ayah);
     const puaWordCount = localVerse ? localVerse.text.trim().split(/\s+/).length : arabicWordCount;
     
-    // Calculate total word count of all segments for proportional distribution
-    // Word count correlates better with Arabic word count than character length
-    const segmentWordCounts = segments.map((seg: string) => seg.trim().split(/\s+/).length);
-    const totalTranslationWords = segmentWordCounts.reduce((sum: number, count: number) => sum + count, 0);
+    // Removed "ۖ" (Sal - permissible but better to continue)
+    // Removed "ۙ" (La - strictly do not stop)
+    const waqfMarks = ["ۚ", "ۗ", "ۛ", "ۘ", "۩", "۞"];
+    const splits: number[] = [];
     
-    // Distribute Arabic units proportionally based on each segment's word count
-    const fallbackMappings = [];
-    let assignedUnits = 0;
-    
-    for (let i = 0; i < segments.length; i++) {
-      const segmentText = segments[i].trim();
-      let count: number;
-      
-      if (i === segments.length - 1) {
-        // Last segment gets all remaining units to ensure exact sum
-        count = puaWordCount - assignedUnits;
-      } else {
-        // Proportional distribution based on word count
-        const proportion = segmentWordCounts[i] / totalTranslationWords;
-        count = Math.max(1, Math.round(proportion * puaWordCount));
+    if (quranWords && quranWords.length > 0) {
+      const words = quranWords.filter((w: any) => w.char_type_name !== "end");
+      let currentCount = 0;
+      for (let i = 0; i < words.length; i++) {
+        const codeV2 = words[i].code_v2 || "";
+        const numCodes = [...codeV2.trim()].length;
+        currentCount += numCodes;
         
-        // Safety: ensure we don't assign more than remaining
-        const remaining = puaWordCount - assignedUnits - (segments.length - 1 - i); // reserve at least 1 for each remaining segment
-        if (count > remaining) {
-          count = Math.max(1, remaining);
+        const text = words[i].text_uthmani || "";
+        const hasWaqf = waqfMarks.some(mark => text.includes(mark));
+        if (hasWaqf && i !== words.length - 1) {
+          splits.push(currentCount);
+          currentCount = 0;
         }
       }
+      if (currentCount > 0) {
+        splits.push(currentCount);
+      }
       
-      assignedUnits += count;
-      
+      if (splits.length > 0) {
+        let sumBeforeLast = 0;
+        for (let j = 0; j < splits.length - 1; j++) sumBeforeLast += splits[j];
+        splits[splits.length - 1] = Math.max(1, puaWordCount - sumBeforeLast);
+      }
+    }
+
+    let newCounts = splits.length > 1 ? splits : [];
+    
+    if (newCounts.length === 0) {
+      const parts = puaWordCount > 15 ? 3 : 2;
+      const arabicPerPart = Math.ceil(puaWordCount / parts);
+      let remaining = puaWordCount;
+      for (let i = 0; i < parts; i++) {
+        if (i === parts - 1) {
+          newCounts.push(remaining);
+        } else {
+          newCounts.push(arabicPerPart);
+          remaining -= arabicPerPart;
+        }
+      }
+    }
+
+    const transWords = translation.split(/\s+/);
+    const fallbackMappings = [];
+    let currentTransWordIdx = 0;
+    
+    for (let i = 0; i < newCounts.length; i++) {
+      let chunkTranslation = "";
+      if (i === newCounts.length - 1) {
+        chunkTranslation = transWords.slice(currentTransWordIdx).join(" ");
+      } else {
+        const ratio = newCounts[i] / puaWordCount;
+        const wordsToTake = Math.max(1, Math.round(transWords.length * ratio));
+        chunkTranslation = transWords.slice(currentTransWordIdx, currentTransWordIdx + wordsToTake).join(" ");
+        currentTransWordIdx += wordsToTake;
+      }
       fallbackMappings.push({
         part: i + 1,
-        translation_text: segmentText,
-        arabic_unit_count: count
+        arabic_unit_count: newCounts[i],
+        translation_text: chunkTranslation
       });
     }
 
-    console.log(`[Auto Segmentation] Fallback: distributed ${puaWordCount} PUA words across ${segments.length} segments proportionally`);
+    console.log(`[Auto Segmentation] Fallback: distributed ${puaWordCount} PUA words across ${newCounts.length} segments using Waqf marks`);
 
     return NextResponse.json({ 
       success: true, 
