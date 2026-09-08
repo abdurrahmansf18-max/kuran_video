@@ -19,6 +19,15 @@ import TranslationSelector from "@/components/quran/TranslationSelector";
 import { useTranslationContext } from "@/lib/TranslationContext";
 import ManualSegmentationEditor from "./ManualSegmentationEditor";
 import AyahSearch from "./../quran/AyahSearch";
+
+const RECITER_OPTIONS = [
+  { id: "mishary_alafasy", name: "Mishary Rashed Alafasy", arName: "مشاري راشد العفاسي" },
+  { id: "maher_muaiqly", name: "Maher Al-Muaiqly", arName: "ماهر المعيقلي" },
+  { id: "ahmed_ajmi", name: "Ahmed Al-Ajmi", arName: "أحمد العجمي" },
+  { id: "yasser_dosari", name: "Yasser Al-Dosari", arName: "ياسر الدوسري" },
+  { id: "abdullah_mousa", name: "Abdullah Al-Mousa", arName: "عبدالله الموسى" },
+  { id: "raad_alkurdi", name: "Raad Mohammad Al Kurdi", arName: "رعد محمد الكردي" },
+];
 import AudioTrimmer from "./AudioTrimmer";
 import { BackgroundStyle, VideoState } from "@/types/video";
 
@@ -940,14 +949,7 @@ export default function VideoCreatorForm() {
             <div className="flex flex-col gap-4">
                 <DropdownSelect
                   placeholder={isArabic ? "مشاري راشد العفاسي" : "Mishary Rashed Alafasy"}
-                  options={[
-                    { value: "mishary_alafasy", label: isArabic ? "مشاري راشد العفاسي" : "Mishary Rashed Alafasy" },
-                    { value: "maher_muaiqly", label: isArabic ? "ماهر المعيقلي" : "Maher Al-Muaiqly" },
-                    { value: "ahmed_ajmi", label: isArabic ? "أحمد العجمي" : "Ahmed Al-Ajmi" },
-                    { value: "yasser_dosari", label: isArabic ? "ياسر الدوسري" : "Yasser Al-Dosari" },
-                    { value: "abdullah_mousa", label: isArabic ? "عبدالله الموسى" : "Abdullah Al-Mousa" },
-                    { value: "raad_alkurdi", label: isArabic ? "رعد محمد الكردي" : "Raad Mohammad Al Kurdi" },
-                  ]}
+                  options={RECITER_OPTIONS.map(r => ({ value: r.id, label: isArabic ? r.arName : r.name }))}
                   value={selectedReciter}
                   onChange={(val) => {
                     setSelectedReciter(val as string);
