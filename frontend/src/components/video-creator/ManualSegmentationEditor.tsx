@@ -137,50 +137,84 @@ export default function ManualSegmentationEditor({
     const mappings = newData[verseIdx].mappings;
     const verse = verses.find(v => v.id === newData[verseIdx].ayah);
     if (!verse) return;
+    
     const allWords = verse.text.trim().split(/\s+/);
-    const waqfMarks = ["ۚ", "ۖ", "ۗ", "ۛ", "ۙ", "ۘ", "۩", "۞"];
+    const totalArabicUnits = allWords.length;
     
-    const newCounts: number[] = [];
-    let currentCount = 0;
+    if (totalArabicUnits < 5) {
+      alert(isArabic ? "الآية قصيرة جداً للتقسيم." : "Ayet otomatik bölünmek için çok kısa.");
+      return;
+    }
+
+    const fullTranslation = mappings.map(m => m.translation_text.trim()).filter(Boolean).join(" ");
     
-    for (let i = 0; i < allWords.length; i++) {
-      currentCount++;
-      if (waqfMarks.includes(allWords[i])) {
-        newCounts.push(currentCount);
-        currentCount = 0;
+    // Try to split by punctuation in translation (logical pauses)
+    const punctuationRegex = /[,;.]\s+/;
+    let transChunks = fullTranslation.split(punctuationRegex).filter(t => t.trim().length > 0);
+    
+    // If no punctuation or too many small chunks, just split mathematically (into 2 or 3)
+    if (transChunks.length <= 1 || transChunks.length > 4) {
+      const parts = totalArabicUnits > 15 ? 3 : 2;
+      const arabicPerPart = Math.ceil(totalArabicUnits / parts);
+      
+      const newCounts: number[] = [];
+      let remaining = totalArabicUnits;
+      for (let i = 0; i < parts; i++) {
+        if (i === parts - 1) {
+          newCounts.push(remaining);
+        } else {
+          newCounts.push(arabicPerPart);
+          remaining -= arabicPerPart;
+        }
       }
-    }
-    if (currentCount > 0) {
-      newCounts.push(currentCount);
-    }
-    
-    if (newCounts.length <= 1) {
-      alert(isArabic ? "لا توجد علامات وقف في هذه الآية للتقسيم عليها." : "Bu ayette otomatik bölünecek bir durak işareti bulunmuyor.");
+      
+      const transWords = fullTranslation.split(/\s+/);
+      const newMappings: Mapping[] = [];
+      let currentTransWordIdx = 0;
+      
+      for (let i = 0; i < newCounts.length; i++) {
+        let chunkTranslation = "";
+        if (i === newCounts.length - 1) {
+          chunkTranslation = transWords.slice(currentTransWordIdx).join(" ");
+        } else {
+          const ratio = newCounts[i] / totalArabicUnits;
+          const wordsToTake = Math.round(transWords.length * ratio);
+          chunkTranslation = transWords.slice(currentTransWordIdx, currentTransWordIdx + wordsToTake).join(" ");
+          currentTransWordIdx += wordsToTake;
+        }
+        newMappings.push({
+          part: i + 1,
+          arabic_unit_count: newCounts[i],
+          translation_text: chunkTranslation
+        });
+      }
+      newData[verseIdx].mappings = newMappings;
+      setEditedData(newData);
       return;
     }
     
-    const fullTranslation = mappings.map(m => m.translation_text.trim()).filter(Boolean).join(" ");
-    const transWords = fullTranslation.split(/\s+/);
-    const totalArabicUnits = allWords.length;
+    // If we have nice punctuation chunks, map arabic counts proportionally
+    const totalTransLength = fullTranslation.length;
+    const newCounts: number[] = [];
+    let remainingArabic = totalArabicUnits;
+    
+    for (let i = 0; i < transChunks.length; i++) {
+      if (i === transChunks.length - 1) {
+        newCounts.push(remainingArabic);
+      } else {
+        const ratio = transChunks[i].length / totalTransLength;
+        const arabicCount = Math.max(1, Math.round(totalArabicUnits * ratio));
+        newCounts.push(arabicCount);
+        remainingArabic -= arabicCount;
+      }
+    }
     
     const newMappings: Mapping[] = [];
-    let currentTransWordIdx = 0;
-    
-    for (let i = 0; i < newCounts.length; i++) {
-      let chunkTranslation = "";
-      if (i === newCounts.length - 1) {
-        chunkTranslation = transWords.slice(currentTransWordIdx).join(" ");
-      } else {
-        const ratio = newCounts[i] / totalArabicUnits;
-        const wordsToTake = Math.round(transWords.length * ratio);
-        chunkTranslation = transWords.slice(currentTransWordIdx, currentTransWordIdx + wordsToTake).join(" ");
-        currentTransWordIdx += wordsToTake;
-      }
-      
+    for (let i = 0; i < transChunks.length; i++) {
       newMappings.push({
         part: i + 1,
         arabic_unit_count: newCounts[i],
-        translation_text: chunkTranslation
+        translation_text: transChunks[i].trim()
       });
     }
     
@@ -274,28 +308,6 @@ export default function ManualSegmentationEditor({
                           {chunkWords.join(" ")}
                         </div>
                         
-                        {/* Controls - Positioned elegantly at the bottom center of the section */}
-                        {mappingIdx < segResult.mappings.length - 1 && (
-                          <div className="flex justify-center mt-3 pt-3 border-t border-border/30">
-                            <div className="flex items-center bg-muted/30 rounded-full border border-border px-1 py-1 gap-1">
-                              <button 
-                                onClick={() => handleAdjustCount(verseIdx, mappingIdx, -1)}
-                                className="text-muted-foreground hover:text-foreground p-1.5 rounded-full hover:bg-background transition-colors shadow-sm"
-                                title={isArabic ? "نقل كلمة للقسم التالي" : "Sonraki bölüme kelime taşı"}
-                              >
-                                <ChevronLeftIcon className="w-5 h-5" />
-                              </button>
-                              <div className="w-px h-4 bg-border mx-1"></div>
-                              <button 
-                                onClick={() => handleAdjustCount(verseIdx, mappingIdx, 1)}
-                                className="text-muted-foreground hover:text-foreground p-1.5 rounded-full hover:bg-background transition-colors shadow-sm"
-                                title={isArabic ? "أخذ كلمة من القسم التالي" : "Sonraki bölümden kelime al"}
-                              >
-                                <ChevronRightIcon className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </div>
-                        )}
                       </div>
                     );
                   })}

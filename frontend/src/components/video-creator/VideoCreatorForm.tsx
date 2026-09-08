@@ -580,31 +580,6 @@ export default function VideoCreatorForm() {
     setIsGeneratingBg(true);
     setRenderError("");
     try {
-      // Each prompt describes a unique scene but all share the same core aesthetic:
-      // - Very dark, deep navy/indigo night sky taking up 70-80% of the frame
-      // - Subtle scattered stars (not dramatic milky way)
-      // - Landscape elements as dark silhouettes at the bottom third only
-      // - Minimal, clean, serene composition
-      // - Real photography feel, not fantasy or over-processed
-      const sceneryOptions = [
-        "dark silhouetted mountain ridge at the bottom of frame against a vast deep navy blue night sky with subtle scattered stars, minimalist landscape photography, very dark and moody",
-        "dark silhouetted coastal cliffs and ocean shoreline at bottom of frame, vast deep dark blue night sky above with faint stars, misty atmosphere, real photograph, serene and minimal",
-        "snow-capped mountain peaks silhouetted at the very bottom of frame, enormous deep indigo night sky with sparse subtle stars, slight purple-pink gradient at horizon, real landscape photograph",
-        "single dark tree silhouette in bottom corner of frame, vast completely dark night sky filling most of the image, very faint scattered stars, extremely minimal and moody, real photograph",
-        "dark rolling hills silhouetted at the bottom of frame, vast deep navy night sky with a small thin crescent moon, no clouds, very dark and minimal, real night photograph",
-        "dark mountain range silhouette at the bottom third, huge deep dark blue sky above with sparse tiny stars, subtle dark blue to black gradient, clean minimal composition, real photograph",
-        "dark forest treeline silhouette at the very bottom of frame, enormous deep dark indigo night sky, very few faint stars scattered, extremely dark and serene, real night photograph",
-        "dark rocky coastline silhouette at bottom, calm dark ocean reflecting deep navy night sky, faint stars above, misty layers between mountains, moody real photograph",
-        "jagged dark mountain peaks at bottom of frame with slight snow, vast deep dark blue-black sky above, barely visible stars, subtle horizon glow, real landscape night photograph",
-        "dark pine forest silhouette at bottom corner, vast deep navy-black night sky, one or two bright stars visible, extremely dark and peaceful, minimalist real photograph",
-        "dark sand dunes silhouetted at bottom of frame, enormous deep dark indigo sky with scattered faint stars, very minimal, no moon, real night desert photograph",
-        "dark volcanic mountain silhouette at bottom, vast deep navy night sky fading to black at top, subtle warm glow at far horizon, sparse stars, real photograph",
-        "layered dark mountain ridges silhouetted at bottom creating depth, vast deep dark blue night sky above, subtle atmospheric haze between layers, faint stars, real photograph",
-        "dark cliff edge with single small tree silhouette at bottom of frame, vast deep dark navy sky, thin crescent moon small in upper area, extremely minimal real photograph",
-        "dark meadow with distant treeline silhouette at bottom, enormous deep indigo-black night sky, very faint milky stars, peaceful and serene, real night landscape photograph"
-      ];
-      const randomScenery = sceneryOptions[Math.floor(Math.random() * sceneryOptions.length)];
-      const prompt = `${randomScenery}, vertical portrait 9:16 aspect ratio, ultra dark tones, deep navy and black color palette, no text no watermark, 4K high resolution, shot on Sony A7III, long exposure night photography, ISO 3200, f/2.8, clean sharp image, variation ${Date.now()}`;
       // Gather translation text of the selected Ayahs
       let ayahText = "";
       if (editedData && editedData.length > 0) {
@@ -619,7 +594,6 @@ export default function VideoCreatorForm() {
       const response = await fetch("/api/ai/generate-background", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
         body: JSON.stringify({ ayahText, retryCount: aiRetries }),
       });
       const data = await response.json();
@@ -627,7 +601,6 @@ export default function VideoCreatorForm() {
          throw new Error(data.error || "Failed to generate background");
       }
       
-      // Fetch the image from the URL and create a File object so it works with the existing flow
       const imgRes = await fetch(data.imageUrl);
       const blob = await imgRes.blob();
       const file = new File([blob], `ai-bg-${Date.now()}.jpg`, { type: blob.type });
