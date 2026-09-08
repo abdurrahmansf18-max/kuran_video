@@ -78,7 +78,6 @@ function getAssetUrl(path: string | undefined | null): string {
 }
 
 function formatInvertedPyramid(text: string, forceTwoLines = true, textScale = 1, prefixLength = 0): React.ReactNode {
-  reciterName,
   if (!text) return null;
   const words = text.split(" ");
   

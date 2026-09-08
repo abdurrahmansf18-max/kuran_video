@@ -447,10 +447,10 @@ export default function VideoCreatorForm() {
     const nextWords = nextVerse ? nextVerse.text.trim().split(/\s+/).length : 0;
     const nextEst = currentEst + (nextWords * 0.8);
     
-    if (nextEst > 60 ) {
+    if (nextEst > 90 ) {
       showToast(isArabic 
-        ? "لقد وصلت إلى الحد الأقصى لمدة الفيديو (60 ثانية) ." 
-        : "Maksimum video süresine (60 saniye) ulaştınız.");
+        ? "لقد وصلت إلى الحد الأقصى لمدة الفيديو (90 ثانية) ." 
+        : "Maksimum video süresine (90 saniye) ulaştınız.");
       return;
     }
 
