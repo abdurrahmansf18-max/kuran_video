@@ -720,6 +720,12 @@ export async function POST(req: Request) {
               mapping.chunkStartFrame = Math.round((startMs / 1000) * FPS);
               mapping.chunkDurationInFrames = Math.max(1, Math.round(((nextStartMs - startMs) / 1000) * FPS));
               
+              if (mIdx === 0 && mapping.chunkStartFrame > 0) {
+                 // First chunk MUST start at 0 so the screen is never empty
+                 mapping.chunkDurationInFrames += mapping.chunkStartFrame;
+                 mapping.chunkStartFrame = 0;
+              }
+              
               if (mIdx === matchingSegmentation.mappings.length - 1) {
                 // Ensure last chunk extends to end of verse duration
                 mapping.chunkDurationInFrames = Math.max(1, durationInFrames - mapping.chunkStartFrame);
