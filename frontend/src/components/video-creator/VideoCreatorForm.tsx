@@ -224,16 +224,16 @@ export default function VideoCreatorForm() {
   };
 
 
-  const executeVideoRender = async (segmentationData: any[] | null = null) => {
+  const executeVideoRender = async (pendingSegmentationData: any[] | null = null) => {
     try {
-      if (segmentationData && segmentationData.length > 0) {
+      if (pendingSegmentationData && pendingSegmentationData.length > 0) {
         setSegmentationProgress(
           isArabic ? "جاري تطبيق التقسيم..." : "Bölümleme uygulanıyor..."
         );
 
         const applyRes = await fetch("/api/segmentation/apply", {
           method: "POST",
-          body: JSON.stringify(segmentationData),
+          body: JSON.stringify(pendingSegmentationData),
           headers: { "Content-Type": "application/json" },
         });
 
@@ -242,7 +242,7 @@ export default function VideoCreatorForm() {
           console.warn(`[UI] Failed to apply segmentation: ${applyData.error}. Continuing without segmentation.`);
           await fetch("/api/segmentation/clear", { method: "POST" }).catch(() => {});
         } else {
-          console.log(`[UI] Successfully applied segmentation for ${segmentationData.length} verses`);
+          console.log(`[UI] Successfully applied segmentation for ${pendingSegmentationData.length} verses`);
         }
       }
 
@@ -585,8 +585,8 @@ export default function VideoCreatorForm() {
     
     // Check selection before starting
     let ayahText = "";
-    if (segmentationData && segmentationData.length > 0) {
-      ayahText = segmentationData.map(v => 
+    if (pendingSegmentationData && pendingSegmentationData.length > 0) {
+      ayahText = pendingSegmentationData.map(v => 
         v.mappings.map(m => m.translation_text).join(" ")
       ).join(" ");
     } else if (selectedSurah && startVerse && endVerse) {
@@ -880,7 +880,7 @@ export default function VideoCreatorForm() {
                          type="button"
                          onClick={handleGenerateBg}
                          disabled={isGeneratingBg}
-                         className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-primary/80 px-5 py-2.5 text-sm font-medium text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary disabled:opacity-50"
+                         className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105 glow-primary hover:bg-primary/90 disabled:opacity-50"
                        >
                          {isGeneratingBg ? (
                             <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
@@ -909,7 +909,7 @@ export default function VideoCreatorForm() {
                     type="button"
                     onClick={handleGenerateBg}
                     disabled={isGeneratingBg || aiRetries >= 2}
-                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/10 px-6 py-2.5 text-sm font-medium text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/20 glow-primary hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-medium text-white transition-all duration-300 shadow-lg glow-primary hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90"
                   >
                     {isGeneratingBg ? (
                       <>

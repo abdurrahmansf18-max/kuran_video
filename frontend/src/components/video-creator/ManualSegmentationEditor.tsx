@@ -138,7 +138,7 @@ export default function ManualSegmentationEditor({
 
     setIsWaqfLoading(true);
     try {
-      const qRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${seg.surah}:${seg.ayah}?language=tr&words=true&word_fields=text_uthmani`);
+      const qRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${seg.surah}:${seg.ayah}?language=tr&words=true&word_fields=text_uthmani,code_v2`);
       const qData = await qRes.json();
       
       const waqfMarks = ["ۚ", "ۖ", "ۗ", "ۛ", "ۙ", "ۘ", "۩", "۞"];
@@ -148,7 +148,10 @@ export default function ManualSegmentationEditor({
         const words = qData.verse.words.filter((w: any) => w.char_type_name !== "end");
         let currentCount = 0;
         for (let i = 0; i < words.length; i++) {
-          currentCount++;
+          const codeV2 = words[i].code_v2 || "";
+          const numCodes = [...codeV2.trim()].length;
+          currentCount += numCodes;
+          
           const text = words[i].text_uthmani || "";
           const hasWaqf = waqfMarks.some(mark => text.includes(mark));
           if (hasWaqf && i !== words.length - 1) {
