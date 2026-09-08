@@ -214,6 +214,7 @@ export async function POST(req: Request) {
     }
 
     const reciterId = (formData.get("reciterId") || "mishary_alafasy") as keyof typeof RECITERS;
+    const reciterName = formData.get("reciterName") as string;
     const translationId = formData.get("translationId") as string || "diyanet_yeni";
     const textScale = Math.max(0.5, Math.min(3, Number(formData.get("textScale")) || 1));
 
@@ -630,6 +631,7 @@ export async function POST(req: Request) {
     const inputProps: QuranVideoProps = {
       surahNameArabic: fixMojibake(removeTashkeel(apiSurah?.name_arabic || localSurah.name)),
       surahNameTransliteration: fixMojibake(apiSurah?.name_turkish || localSurah.transliteration).toLocaleUpperCase("tr-TR"),
+      reciterName,
       backgroundImagePath,
       globalAudioPath,
       isAudioExtracted: apiExtracted,

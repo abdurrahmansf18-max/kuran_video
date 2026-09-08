@@ -112,6 +112,8 @@ export default function VideoCreatorForm() {
       formData.append("startVerse", startVerse.toString());
       formData.append("endVerse", endVerse.toString());
       formData.append("reciterId", selectedReciter);
+      const reciterObj = RECITER_OPTIONS.find(r => r.id === selectedReciter);
+      if (reciterObj) formData.append("reciterName", reciterObj.name);
       if (audioSourceMode === "custom" && customAudio) {
         formData.append("customAudio", customAudio);
       }
@@ -250,8 +252,12 @@ export default function VideoCreatorForm() {
       if (audioSourceMode === "custom" && customAudio) {
         formData.append("customAudio", customAudio);
         formData.append("reciterId", selectedReciter);
+      const reciterObj = RECITER_OPTIONS.find(r => r.id === selectedReciter);
+      if (reciterObj) formData.append("reciterName", reciterObj.name);
       } else {
         formData.append("reciterId", selectedReciter);
+      const reciterObj = RECITER_OPTIONS.find(r => r.id === selectedReciter);
+      if (reciterObj) formData.append("reciterName", reciterObj.name);
       }
 
       if (bgImage) {

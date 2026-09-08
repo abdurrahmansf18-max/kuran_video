@@ -31,4 +31,5 @@ export type QuranVideoProps = {
   verses: QuranVerse[];
   totalDurationInFrames: number;
   textScale?: number;
+  reciterName?: string;
 };

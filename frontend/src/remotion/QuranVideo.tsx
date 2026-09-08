@@ -78,6 +78,7 @@ function getAssetUrl(path: string | undefined | null): string {
 }
 
 function formatInvertedPyramid(text: string, forceTwoLines = true, textScale = 1, prefixLength = 0): React.ReactNode {
+  reciterName,
   if (!text) return null;
   const words = text.split(" ");
   
@@ -271,6 +272,7 @@ function VerseScene({
   durationInFrames,
   page,
   textScale = 1,
+  reciterName,
   showNumber = true,
 }: {
   text: string;
@@ -449,6 +451,7 @@ export function QuranVideo({
   verses,
   totalDurationInFrames,
   textScale = 1,
+  reciterName,
 }: QuranVideoProps) {
   const [fontHandle] = useState(() => delayRender("Loading Quran video fonts"));
 
@@ -710,9 +713,20 @@ export function QuranVideo({
               letterSpacing: TRANSLITERATION_LETTER_SPACING,
               marginTop: TRANSLITERATION_MARGIN_TOP,
               textShadow: TEXT_SHADOW_STRONG,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "4px"
             }}
           >
-            {surahNameTransliteration} SURESİ
+            <div>
+              {surahNameTransliteration} SURESİ {verses.length > 0 ? (verses[0].id === verses[verses.length - 1].id ? `(Ayet ${verses[0].id})` : `(Ayet ${verses[0].id}-${verses[verses.length - 1].id})`) : ""}
+            </div>
+            {reciterName ? (
+              <div style={{ fontSize: Math.round(TRANSLITERATION_FONT_SIZE * 0.6 * textScale), opacity: 0.85, marginTop: "4px" }}>
+                🎙️ {reciterName}
+              </div>
+            ) : null}
           </div>
         ) : null}
       </AbsoluteFill>
