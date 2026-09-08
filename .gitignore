@@ -52,3 +52,11 @@ frontend/public/renders/temp_video/
 backend/.pytest_cache/
 backend/ffmpeg/
 temp_api.json
+
+# Temporary output files
+*.log
+temp_timings.json
+editions.json
+dummy.mp3
+out*.mp3
+backend/app/static/tmp/
