@@ -98,9 +98,9 @@ export default function DropdownSelect({
           disabled={disabled}
           className={[
             "w-full h-[50px] outline-none transition-all duration-300",
-            buttonClassName || "rounded-xl border border-border bg-background shadow-sm hover:border-primary/30 hover:shadow-md",
+            buttonClassName || "rounded-xl border border-border bg-background shadow-sm hover:border-primary/50 hover:shadow-glow",
             "text-sm font-medium",
-            "focus:border-primary focus:ring-1 focus:ring-primary",
+            "focus:border-primary focus:ring-1 focus:ring-primary focus:shadow-glow",
             disabled ? "opacity-50 cursor-not-allowed" : "cursor-text",
             isRtl ? "text-right pl-10 pr-4" : "text-left pr-10 pl-4",
           ].join(" ")}
