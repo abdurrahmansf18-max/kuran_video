@@ -692,7 +692,7 @@ export default function VideoCreatorForm() {
                   setSelectedSurah(targetSurah);
                   setStartVerse(ayahId);
                   setEndVerse(ayahId);
-                  setEditedData([]);
+                  setPendingSegmentationData([]);
                 }
               }} 
             />
