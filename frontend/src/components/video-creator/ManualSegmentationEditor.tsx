@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { XMarkIcon, CheckIcon, ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, CheckIcon, ChevronRightIcon, ChevronLeftIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 interface Mapping {
   part: number;
@@ -40,6 +40,11 @@ export default function ManualSegmentationEditor({
 }: ManualSegmentationEditorProps) {
   // Local state to hold the editable data
   const [editedData, setEditedData] = useState<SegmentationResult[]>([]);
+  const [toast, setToast] = useState<{message: string} | null>(null);
+  const showToast = (message: string) => {
+    setToast({ message });
+    setTimeout(() => setToast(null), 3500);
+  };
 
   useEffect(() => {
     if (isOpen && segmentationData) {
@@ -55,30 +60,17 @@ export default function ManualSegmentationEditor({
     const mappings = newData[verseIdx].mappings;
     const verse = verses.find(v => v.id === newData[verseIdx].ayah);
     if (!verse) return;
-    const allWords = verse.text.trim().split(/\s+/);
-    const waqfMarks = ["ۚ", "ۖ", "ۗ", "ۛ", "ۙ", "ۘ", "۩", "۞"];
-
-    // Find the starting index of the next mapping to know which word we are interacting with
-    let currentIdx = 0;
-    for (let i = 0; i <= mappingIdx; i++) {
-      currentIdx += mappings[i].arabic_unit_count;
-    }
     
     // We can only shift words between adjacent mappings
     if (delta > 0) {
       // Trying to increase current mapping's count (take from next)
       if (mappingIdx < mappings.length - 1 && mappings[mappingIdx + 1].arabic_unit_count > 0) {
+        if (mappings[mappingIdx + 1].arabic_unit_count === 2) {
+          showToast(isArabic ? "لا يمكن ترك كلمة واحدة في القسم." : "Bir bölümde en az 2 kelime kalmalıdır.");
+          return;
+        }
+        
         let shiftAmount = 1;
-        
-        // If the word we take is NOT a Waqf, but the one after it IS, take both
-        if (currentIdx + 1 < allWords.length && waqfMarks.includes(allWords[currentIdx + 1])) {
-          shiftAmount = 2;
-        }
-        
-        if (mappings[mappingIdx + 1].arabic_unit_count < shiftAmount) {
-          shiftAmount = mappings[mappingIdx + 1].arabic_unit_count;
-        }
-
         mappings[mappingIdx].arabic_unit_count += shiftAmount;
         mappings[mappingIdx + 1].arabic_unit_count -= shiftAmount;
         
@@ -90,17 +82,12 @@ export default function ManualSegmentationEditor({
     } else {
       // Trying to decrease current mapping's count (give to next)
       if (mappings[mappingIdx].arabic_unit_count > 0 && mappingIdx < mappings.length - 1) {
+        if (mappings[mappingIdx].arabic_unit_count === 2) {
+          showToast(isArabic ? "لا يمكن ترك كلمة واحدة في القسم." : "Bir bölümde en az 2 kelime kalmalıdır.");
+          return;
+        }
+        
         let shiftAmount = 1;
-        
-        // If the word we give is a Waqf mark, we MUST also give the word before it
-        if (waqfMarks.includes(allWords[currentIdx - 1])) {
-          shiftAmount = 2;
-        }
-        
-        if (mappings[mappingIdx].arabic_unit_count < shiftAmount) {
-          shiftAmount = mappings[mappingIdx].arabic_unit_count;
-        }
-
         mappings[mappingIdx].arabic_unit_count -= shiftAmount;
         mappings[mappingIdx + 1].arabic_unit_count += shiftAmount;
         
@@ -128,7 +115,7 @@ export default function ManualSegmentationEditor({
       });
       setEditedData(newData);
     } else {
-      alert(isArabic ? "القسم الأخير يحتوي على كلمة واحدة فقط. لا يمكن إنشاء قسم جديد." : "Son bölümde sadece bir kelime var. Yeni bölüm oluşturulamaz.");
+      showToast(isArabic ? "القسم الأخير يحتوي على كلمة واحدة فقط. لا يمكن إنشاء قسم جديد." : "Son bölümde sadece bir kelime var. Yeni bölüm oluşturulamaz.");
     }
   };
 
@@ -142,7 +129,7 @@ export default function ManualSegmentationEditor({
     const totalArabicUnits = allWords.length;
     
     if (totalArabicUnits < 5) {
-      alert(isArabic ? "الآية قصيرة جداً للتقسيم." : "Ayet otomatik bölünmek için çok kısa.");
+      showToast(isArabic ? "الآية قصيرة جداً للتقسيم." : "Ayet otomatik bölünmek için çok kısa.");
       return;
     }
 
@@ -308,6 +295,27 @@ export default function ManualSegmentationEditor({
                           {chunkWords.join(" ")}
                         </div>
                         
+                        {mappingIdx < segResult.mappings.length - 1 && (
+                          <div className="flex justify-center mt-3 pt-3 border-t border-border/30">
+                            <div className="flex items-center bg-primary/10 rounded-full border border-primary/20 px-1 py-1 gap-1">
+                              <button 
+                                onClick={() => handleAdjustCount(verseIdx, mappingIdx, -1)}
+                                className="text-primary hover:text-white p-1.5 rounded-full hover:bg-primary transition-colors shadow-sm"
+                                title={isArabic ? "نقل كلمة للقسم التالي" : "Sonraki bölüme kelime taşı"}
+                              >
+                                <ChevronLeftIcon className="w-5 h-5" />
+                              </button>
+                              <div className="w-px h-4 bg-primary/30 mx-1"></div>
+                              <button 
+                                onClick={() => handleAdjustCount(verseIdx, mappingIdx, 1)}
+                                className="text-primary hover:text-white p-1.5 rounded-full hover:bg-primary transition-colors shadow-sm"
+                                title={isArabic ? "أخذ كلمة من القسم التالي" : "Sonraki bölümden kelime al"}
+                              >
+                                <ChevronRightIcon className="w-5 h-5" />
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -388,6 +396,13 @@ export default function ManualSegmentationEditor({
             </button>
           </div>
         </div>
+        
+        {toast && (
+          <div className="fixed top-1/2 right-4 -translate-y-1/2 z-[60] bg-primary text-primary-foreground px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-right-8 duration-300 border border-primary-foreground/20">
+            <ExclamationTriangleIcon className="w-6 h-6" />
+            <span className="font-medium text-sm">{toast.message}</span>
+          </div>
+        )}
       </div>
     </>
   );

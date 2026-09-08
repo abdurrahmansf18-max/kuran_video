@@ -69,6 +69,11 @@ export default function VideoCreatorForm() {
   const [bgImage, setBgImage] = useState<File | null>(null);
   const [bgPreview, setBgPreview] = useState<string | null>(null);
   const [renderState, setRenderState] = useState<RenderState>("idle");
+  const [toast, setToast] = useState<{message: string} | null>(null);
+  const showToast = (message: string) => {
+    setToast({ message });
+    setTimeout(() => setToast(null), 3500);
+  };
   const [surahTurkishNames, setSurahTurkishNames] = useState<Map<number, string>>(
     new Map(surahs.map((s) => [s.id, s.transliteration]))
   );
@@ -159,19 +164,19 @@ export default function VideoCreatorForm() {
           setTrimmedPreviewUrl(null);
           setShowAudioTrimmer(true);
         } else {
-          alert(data.error);
+          showToast(data.error);
         }
       } else {
         const errData = await res.json().catch(() => null);
         if (errData && errData.error) {
-          alert(errData.error);
+          showToast(errData.error);
         } else {
-          alert(isArabic ? "فشل تجهيز الصوت. حدث خطأ في الخادم." : "Ses hazırlanamadı. Sunucu hatası.");
+          showToast(isArabic ? "فشل تجهيز الصوت. حدث خطأ في الخادم." : "Ses hazırlanamadı. Sunucu hatası.");
         }
       }
     } catch (e) {
       console.error(e);
-      alert(isArabic ? "حدث خطأ أثناء الاتصال بالخادم" : "Sunucuya bağlanırken hata oluştu");
+      showToast(isArabic ? "حدث خطأ أثناء الاتصال بالخادم" : "Sunucuya bağlanırken hata oluştu");
     } finally {
       setIsPreparingAudio(false);
       setAudioProgressStage(null);
@@ -433,7 +438,7 @@ export default function VideoCreatorForm() {
     const nextEst = currentEst + (nextWords * 0.8);
     
     if (nextEst > 60 ) {
-      alert(isArabic 
+      showToast(isArabic 
         ? "لقد وصلت إلى الحد الأقصى لمدة الفيديو (60 ثانية) ." 
         : "Maksimum video süresine (60 saniye) ulaştınız.");
       return;
@@ -547,7 +552,7 @@ export default function VideoCreatorForm() {
     if (segmentationResults.length > 0) {
       setPendingSegmentationData(segmentationResults);
     } else {
-      alert(isArabic ? "لم يتم العثور على ترجمات للآيات المحددة." : "Seçili ayetler için çeviri bulunamadı.");
+      showToast(isArabic ? "لم يتم العثور على ترجمات للآيات المحددة." : "Seçili ayetler için çeviri bulunamadı.");
     }
     setSegmentationProgress(null);
   };
@@ -1120,6 +1125,13 @@ export default function VideoCreatorForm() {
             />
           );
         })()
+      )}
+      
+      {toast && (
+        <div className="fixed top-1/2 right-4 -translate-y-1/2 z-[100] bg-primary text-primary-foreground px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-right-8 duration-300 border border-primary-foreground/20">
+          <ExclamationTriangleIcon className="w-6 h-6" />
+          <span className="font-medium text-sm">{toast.message}</span>
+        </div>
       )}
     </>
   );
