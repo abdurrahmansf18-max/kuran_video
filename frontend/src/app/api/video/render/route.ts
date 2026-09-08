@@ -552,8 +552,13 @@ export async function POST(req: Request) {
               const endMs = nextTimings[0].start;
               durationInFrames = Math.max(1, Math.round(((endMs - startMs) / 1000) * FPS));
             } else {
-              // For the last verse, duration is determined later by post-processing
-              durationInFrames = Math.max(1, Math.round(((timings[timings.length - 1].end - startMs) / 1000) * FPS));
+              // For the last verse, use the remaining global audio duration to include trailing echoes and Madd
+              const startFrame = Math.round((startMs / 1000) * FPS);
+              if (globalAudioDurationInFrames > startFrame) {
+                 durationInFrames = globalAudioDurationInFrames - startFrame;
+              } else {
+                 durationInFrames = Math.max(1, Math.round(((timings[timings.length - 1].end - startMs) / 1000) * FPS));
+              }
             }
           } else {
             // Proportionally assign duration based on character count
@@ -613,43 +618,71 @@ export async function POST(req: Request) {
           if (apiVerse && apiVerse.words) {
             const quranWords = apiVerse.words.filter((w: any) => w.char_type_name !== "end");
             
-            // Align Whisper to QuranWords
+            // Align Whisper to QuranWords using Proportional Character Alignment
+            // This is immune to string matching bugs, prefixes, and Whisper transcription errors
             const alignedTimings = new Array(quranWords.length).fill(null);
-            let tIdx = 0;
-            let matchedCount = 0;
+            
+            const quranCharCounts = quranWords.map((w: any) => cleanArabic(w.text_uthmani).length);
+            const totalQuranChars = quranCharCounts.reduce((a: number, b: number) => a + b, 0);
+            
+            const whisperCharCounts = wordTimings.map((w: any) => cleanArabic(w.w).length);
+            const totalWhisperChars = whisperCharCounts.reduce((a: number, b: number) => a + b, 0);
+            
+            let currentQuranChars = 0;
+            let currentWhisperChars = 0;
+            let wIdx = 0;
             
             for (let i = 0; i < quranWords.length; i++) {
-              const wordClean = cleanArabic(quranWords[i].text_uthmani);
-              if (!wordClean) continue;
+              const qChars = quranCharCounts[i];
+              if (qChars === 0) continue;
               
-              for (let lookAhead = 0; lookAhead <= 2; lookAhead++) {
-                if (tIdx + lookAhead < wordTimings.length) {
-                  const timingClean = cleanArabic(wordTimings[tIdx + lookAhead].w);
-                  if (timingClean === wordClean || timingClean.includes(wordClean) || wordClean.includes(timingClean)) {
-                    let matchedTiming = { ...wordTimings[tIdx + lookAhead] };
-                    let consumed = 1;
-                    
-                    let accumulatedText = timingClean;
-                    while (accumulatedText.length < wordClean.length && tIdx + lookAhead + consumed < wordTimings.length) {
-                      const nextFragmentClean = cleanArabic(wordTimings[tIdx + lookAhead + consumed].w);
-                      const remainingExpected = wordClean.substring(accumulatedText.length);
-                      if (remainingExpected.startsWith(nextFragmentClean) || nextFragmentClean.includes(remainingExpected)) {
-                        accumulatedText += nextFragmentClean;
-                        matchedTiming.end = wordTimings[tIdx + lookAhead + consumed].end;
-                        consumed++;
-                      } else {
-                        break;
-                      }
-                    }
-                    
-                    alignedTimings[i] = matchedTiming;
-                    tIdx += lookAhead + consumed;
-                    matchedCount++;
-                    break;
-                  }
+              currentQuranChars += qChars;
+              const targetRatio = currentQuranChars / totalQuranChars;
+              
+              // Advance Whisper words until their cumulative ratio matches or exceeds the target ratio
+              let bestWIdx = wIdx;
+              let minDiff = Infinity;
+              
+              while (wIdx < wordTimings.length) {
+                const wChars = whisperCharCounts[wIdx];
+                const newWhisperChars = currentWhisperChars + wChars;
+                const ratio = newWhisperChars / totalWhisperChars;
+                const diff = Math.abs(ratio - targetRatio);
+                
+                if (diff <= minDiff) {
+                  minDiff = diff;
+                  bestWIdx = wIdx;
+                }
+                
+                if (ratio >= targetRatio) {
+                  break;
+                }
+                
+                currentWhisperChars = newWhisperChars;
+                wIdx++;
+              }
+              
+              // Map this Quran word to the best matching Whisper word
+              if (bestWIdx < wordTimings.length) {
+                alignedTimings[i] = { ...wordTimings[bestWIdx] };
+                // Also adjust start time if it's part of a merged Whisper word
+                if (bestWIdx > 0 && i > 0 && alignedTimings[i-1] && alignedTimings[i].start === alignedTimings[i-1].start) {
+                    // Estimate proportion inside the merged word
+                    const proportion = qChars / (qChars + quranCharCounts[i-1]);
+                    const duration = alignedTimings[i].end - alignedTimings[i].start;
+                    alignedTimings[i].start += duration * (1 - proportion);
+                    alignedTimings[i-1].end = alignedTimings[i].start;
                 }
               }
+              
+              // Catch up wIdx if needed
+              if (bestWIdx > wIdx) {
+                currentWhisperChars += whisperCharCounts.slice(wIdx, bestWIdx).reduce((a: number, b: number) => a + b, 0);
+                wIdx = bestWIdx;
+              }
             }
+            
+            const matchedCount = quranWords.length; // All words are aligned proportionally
 
             // Assign timings to mappings
             let currentPuaCount = 0;
