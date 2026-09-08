@@ -417,6 +417,7 @@ export default function VideoCreatorForm() {
   };
 
   const handleAddNextVerse = () => {
+    if (!selectedSurah || endVerse === null) return;
     if (!selectedSurah || endVerse === null || startVerse === null) return;
     
     // Check limit before adding
@@ -425,10 +426,10 @@ export default function VideoCreatorForm() {
     const nextWords = nextVerse ? nextVerse.text.trim().split(/\s+/).length : 0;
     const nextEst = currentEst + (nextWords * 0.8);
     
-    if (nextEst > 60 || (endVerse - startVerse + 1) >= 7) {
+    if (nextEst > 60 ) {
       alert(isArabic 
-        ? "لقد وصلت إلى الحد الأقصى لمدة الفيديو (60 ثانية) أو لعدد الآيات (7)." 
-        : "Maksimum video süresi (60 saniye) veya ayet sınırına (7) ulaştınız.");
+        ? "لقد وصلت إلى الحد الأقصى لمدة الفيديو (60 ثانية) ." 
+        : "Maksimum video süresine (60 saniye) ulaştınız.");
       return;
     }
 
@@ -573,6 +574,31 @@ export default function VideoCreatorForm() {
     setIsGeneratingBg(true);
     setRenderError("");
     try {
+      // Each prompt describes a unique scene but all share the same core aesthetic:
+      // - Very dark, deep navy/indigo night sky taking up 70-80% of the frame
+      // - Subtle scattered stars (not dramatic milky way)
+      // - Landscape elements as dark silhouettes at the bottom third only
+      // - Minimal, clean, serene composition
+      // - Real photography feel, not fantasy or over-processed
+      const sceneryOptions = [
+        "dark silhouetted mountain ridge at the bottom of frame against a vast deep navy blue night sky with subtle scattered stars, minimalist landscape photography, very dark and moody",
+        "dark silhouetted coastal cliffs and ocean shoreline at bottom of frame, vast deep dark blue night sky above with faint stars, misty atmosphere, real photograph, serene and minimal",
+        "snow-capped mountain peaks silhouetted at the very bottom of frame, enormous deep indigo night sky with sparse subtle stars, slight purple-pink gradient at horizon, real landscape photograph",
+        "single dark tree silhouette in bottom corner of frame, vast completely dark night sky filling most of the image, very faint scattered stars, extremely minimal and moody, real photograph",
+        "dark rolling hills silhouetted at the bottom of frame, vast deep navy night sky with a small thin crescent moon, no clouds, very dark and minimal, real night photograph",
+        "dark mountain range silhouette at the bottom third, huge deep dark blue sky above with sparse tiny stars, subtle dark blue to black gradient, clean minimal composition, real photograph",
+        "dark forest treeline silhouette at the very bottom of frame, enormous deep dark indigo night sky, very few faint stars scattered, extremely dark and serene, real night photograph",
+        "dark rocky coastline silhouette at bottom, calm dark ocean reflecting deep navy night sky, faint stars above, misty layers between mountains, moody real photograph",
+        "jagged dark mountain peaks at bottom of frame with slight snow, vast deep dark blue-black sky above, barely visible stars, subtle horizon glow, real landscape night photograph",
+        "dark pine forest silhouette at bottom corner, vast deep navy-black night sky, one or two bright stars visible, extremely dark and peaceful, minimalist real photograph",
+        "dark sand dunes silhouetted at bottom of frame, enormous deep dark indigo sky with scattered faint stars, very minimal, no moon, real night desert photograph",
+        "dark volcanic mountain silhouette at bottom, vast deep navy night sky fading to black at top, subtle warm glow at far horizon, sparse stars, real photograph",
+        "layered dark mountain ridges silhouetted at bottom creating depth, vast deep dark blue night sky above, subtle atmospheric haze between layers, faint stars, real photograph",
+        "dark cliff edge with single small tree silhouette at bottom of frame, vast deep dark navy sky, thin crescent moon small in upper area, extremely minimal real photograph",
+        "dark meadow with distant treeline silhouette at bottom, enormous deep indigo-black night sky, very faint milky stars, peaceful and serene, real night landscape photograph"
+      ];
+      const randomScenery = sceneryOptions[Math.floor(Math.random() * sceneryOptions.length)];
+      const prompt = `${randomScenery}, vertical portrait 9:16 aspect ratio, ultra dark tones, deep navy and black color palette, no text no watermark, 4K high resolution, shot on Sony A7III, long exposure night photography, ISO 3200, f/2.8, clean sharp image, variation ${Date.now()}`;
       // Gather translation text of the selected Ayahs
       let ayahText = "";
       if (editedData && editedData.length > 0) {
@@ -587,6 +613,7 @@ export default function VideoCreatorForm() {
       const response = await fetch("/api/ai/generate-background", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
         body: JSON.stringify({ ayahText, retryCount: aiRetries }),
       });
       const data = await response.json();
@@ -594,6 +621,7 @@ export default function VideoCreatorForm() {
          throw new Error(data.error || "Failed to generate background");
       }
       
+      // Fetch the image from the URL and create a File object so it works with the existing flow
       const imgRes = await fetch(data.imageUrl);
       const blob = await imgRes.blob();
       const file = new File([blob], `ai-bg-${Date.now()}.jpg`, { type: blob.type });
@@ -836,7 +864,6 @@ export default function VideoCreatorForm() {
             <div 
               className="group relative flex min-h-[220px] w-full flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-border/60 bg-gradient-to-b from-surface/30 to-background/50 p-6 transition-all duration-500 hover:border-primary/40 hover:bg-surface/50"
               onClick={(e) => {
-                // Only open lightbox if clicking the container area (not buttons/labels)
                 const target = e.target as HTMLElement;
                 if (bgPreview && !target.closest('button') && !target.closest('label')) {
                   window.open(bgPreview, '_blank');
@@ -850,19 +877,31 @@ export default function VideoCreatorForm() {
                   <img src={bgPreview} alt="" className="absolute inset-0 h-full w-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-opacity duration-500 group-hover:bg-black/40" />
                   
-                  {/* Hint text for clicking to preview */}
-                  <p className="relative z-10 text-xs text-white/70 mb-3 pointer-events-none">
-                    {isArabic ? "اضغط على الصورة لعرضها بالحجم الكامل" : "Tam boyut önizleme için resme tıklayın"}
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={(e) => { e.stopPropagation(); removeImage(); }}
-                    className="relative z-10 inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-5 py-2.5 text-sm font-medium text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-red-500 hover:bg-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.4)]"
-                  >
-                    <XMarkIcon className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
-                    {isArabic ? "إزالة الصورة" : "Resmi Kaldır"}
-                  </button>
+                  <div className="relative z-10 flex flex-col items-center gap-3 mt-auto mb-2">
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); removeImage(); }}
+                      className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-5 py-2.5 text-sm font-medium text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-red-500 hover:bg-red-500"
+                    >
+                      <XMarkIcon className="h-4 w-4" />
+                      {isArabic ? "إزالة الصورة" : "Resmi Kaldır"}
+                    </button>
+                    {aiRetries < 2 && (
+                       <button
+                         type="button"
+                         onClick={handleGenerateBg}
+                         disabled={isGeneratingBg}
+                         className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-primary/80 px-5 py-2.5 text-sm font-medium text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary disabled:opacity-50"
+                       >
+                         {isGeneratingBg ? (
+                            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                         ) : (
+                            <PhotoIcon className="h-4 w-4" />
+                         )}
+                         {isArabic ? `توليد جديد (${2 - aiRetries} متبقي)` : `Yeni Oluştur (${2 - aiRetries} Hak Kaldı)`}
+                       </button>
+                    )}
+                  </div>
                 </>
               ) : (
                 <div className="relative z-10 flex flex-col items-center space-y-4 text-center">
@@ -871,16 +910,29 @@ export default function VideoCreatorForm() {
                   </div>
                   <div className="space-y-1.5">
                     <p className="text-base font-semibold tracking-tight text-foreground transition-colors duration-300 group-hover:text-primary">
-                      {isArabic ? "ارفع صورة لتكون خلفية الفيديو" : "Video arka planı için resim yükleyin"}
+                      {isArabic ? "توليد خلفية فريدة تعبر عن الآيات" : "Ayetlere uygun eşsiz bir arka plan oluşturun"}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      {isArabic ? "عند عدم اختيار صورة سيتم استخدام خلفية سوداء." : "Resim seçilmezse siyah arka plan kullanılır."}
+                    <p className="text-sm text-muted-foreground max-w-[80%] mx-auto">
+                      {isArabic ? "نستخدم الذكاء الاصطناعي لإنشاء صور لا تحتوي على أرواح أو محرمات." : "Sistem, ayet içeriğine uygun, canlı tasviri içermeyen (melek, yüz vb.) güvenli görseller üretir."}
                     </p>
                   </div>
-                  <label className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 px-6 py-2.5 text-sm font-medium text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary hover:text-white hover:shadow-glow">
-                    {isArabic ? "اختر صورة" : "Resim Seç"}
-                    <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                  </label>
+                  <button
+                    type="button"
+                    onClick={handleGenerateBg}
+                    disabled={isGeneratingBg || aiRetries >= 2}
+                    className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/10 px-6 py-2.5 text-sm font-medium text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/20 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isGeneratingBg ? (
+                      <>
+                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        {isArabic ? "جاري التوليد..." : "Oluşturuluyor..."}
+                      </>
+                    ) : (
+                      <>
+                        {isArabic ? "توليد بالذكاء الاصطناعي" : "AI ile Görsel Oluştur"}
+                      </>
+                    )}
+                  </button>
                 </div>
               )}
             </div>

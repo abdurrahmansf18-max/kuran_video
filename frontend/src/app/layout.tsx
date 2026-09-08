@@ -83,6 +83,9 @@ export const metadata: Metadata = {
     images: ["/kuran-nuru-logo.png"],
   },
   icons: {
+    icon: "/kuran-nuru-favicon.png",
+    shortcut: "/kuran-nuru-favicon.png",
+    apple: "/kuran-nuru-favicon.png",
     icon: "/huzur-ayeti-logo.jpeg",
     shortcut: "/huzur-ayeti-logo.jpeg",
     apple: "/huzur-ayeti-logo.jpeg",
