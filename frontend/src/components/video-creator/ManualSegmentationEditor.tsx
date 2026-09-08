@@ -141,7 +141,7 @@ export default function ManualSegmentationEditor({
       const qRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${seg.surah}:${seg.ayah}?language=tr&words=true&word_fields=text_uthmani,code_v2`);
       const qData = await qRes.json();
       
-      const waqfMarks = ["ۚ", "ۗ", "ۛ", "ۘ", "۩", "۞"];
+      const waqfMarks = ["ۚ", "ۗ", "ۛ", "ۘ"];
       const splits: number[] = [];
       
       if (qData.verse && qData.verse.words) {
@@ -229,6 +229,26 @@ export default function ManualSegmentationEditor({
     setEditedData(newData);
   };
 
+  const handleMoveUnitForward = (verseIdx: number, mappingIdx: number) => {
+    const newData = [...editedData];
+    const mappings = newData[verseIdx].mappings;
+    if (mappingIdx < mappings.length - 1 && mappings[mappingIdx].arabic_unit_count > 1) {
+      mappings[mappingIdx].arabic_unit_count -= 1;
+      mappings[mappingIdx + 1].arabic_unit_count += 1;
+      setEditedData(newData);
+    }
+  };
+
+  const handleMoveUnitBackward = (verseIdx: number, mappingIdx: number) => {
+    const newData = [...editedData];
+    const mappings = newData[verseIdx].mappings;
+    if (mappingIdx > 0 && mappings[mappingIdx].arabic_unit_count > 1) {
+      mappings[mappingIdx].arabic_unit_count -= 1;
+      mappings[mappingIdx - 1].arabic_unit_count += 1;
+      setEditedData(newData);
+    }
+  };
+
   const handleConfirm = () => {
     onConfirm(editedData);
   };
@@ -297,16 +317,41 @@ export default function ManualSegmentationEditor({
                       <div key={mappingIdx} className="flex flex-col gap-3 p-4 rounded-lg bg-card border border-border relative">
                         {/* Translation Part */}
                         <textarea
-                          readOnly
                           value={mapping.translation_text}
+                          onChange={(e) => handleTranslationChange(verseIdx, mappingIdx, e.target.value)}
                           className="w-full bg-transparent text-primary font-medium text-sm sm:text-base pb-2 focus:outline-none resize-none"
                           rows={Math.max(2, Math.ceil(mapping.translation_text.length / 35))}
                           dir={isArabic ? "rtl" : "ltr"}
                         />
                         
                         {/* Arabic Part Preview */}
-                        <div dir="rtl" className="text-right text-foreground text-xl sm:text-2xl leading-relaxed font-arabic mt-2" style={{ fontFamily: verse.page ? `'p${verse.page}'` : "inherit" }}>
-                          {chunkWords.join(" ")}
+                        <div className="flex flex-col gap-2 mt-2">
+                          <div dir="rtl" className="text-right text-foreground text-xl sm:text-2xl leading-relaxed font-arabic" style={{ fontFamily: verse.page ? `'p${verse.page}'` : "inherit" }}>
+                            {chunkWords.join(" ")}
+                          </div>
+                          <div className="flex items-center justify-between border-t border-border/30 pt-2 mt-1">
+                            <div className="text-xs text-muted-foreground">
+                              {isArabic ? "نقل كلمة:" : "Kelime taşı:"}
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleMoveUnitBackward(verseIdx, mappingIdx)}
+                                disabled={mappingIdx === 0 || mapping.arabic_unit_count <= 1}
+                                className="w-8 h-8 flex items-center justify-center rounded-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground disabled:opacity-30 disabled:hover:bg-secondary disabled:hover:text-secondary-foreground transition-colors"
+                                title={isArabic ? "نقل الكلمة للقسم السابق" : "Önceki bölüme taşı"}
+                              >
+                                ↑
+                              </button>
+                              <button
+                                onClick={() => handleMoveUnitForward(verseIdx, mappingIdx)}
+                                disabled={mappingIdx === segResult.mappings.length - 1 || mapping.arabic_unit_count <= 1}
+                                className="w-8 h-8 flex items-center justify-center rounded-full bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground disabled:opacity-30 disabled:hover:bg-secondary disabled:hover:text-secondary-foreground transition-colors"
+                                title={isArabic ? "نقل الكلمة للقسم التالي" : "Sonraki bölüme taşı"}
+                              >
+                                ↓
+                              </button>
+                            </div>
+                          </div>
                         </div>
                         
 

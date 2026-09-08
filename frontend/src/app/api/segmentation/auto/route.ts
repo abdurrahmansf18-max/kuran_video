@@ -313,7 +313,7 @@ export async function POST(req: Request) {
     
     // Removed "ۖ" (Sal - permissible but better to continue)
     // Removed "ۙ" (La - strictly do not stop)
-    const waqfMarks = ["ۚ", "ۗ", "ۛ", "ۘ", "۩", "۞"];
+    const waqfMarks = ["ۚ", "ۗ", "ۛ", "ۘ"];
     const splits: number[] = [];
     
     if (quranWords && quranWords.length > 0) {
