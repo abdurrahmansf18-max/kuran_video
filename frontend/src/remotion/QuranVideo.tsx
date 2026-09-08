@@ -637,8 +637,11 @@ export function QuranVideo({
                     const startMs = timingsAligned[startWordIdx].start;
                     
                     let nextStartMs = timingsAligned[endWordIdx].end; // Fallback
-                    if (endWordIdx + 1 < timingsAligned.length) {
-                       nextStartMs = timingsAligned[endWordIdx + 1].start;
+                    for (let j = endWordIdx + 1; j < timingsAligned.length; j++) {
+                      if (timingsAligned[j].start > timingsAligned[endWordIdx].start) {
+                        nextStartMs = timingsAligned[j].start;
+                        break;
+                      }
                     }
 
                     chunkStartFrame = Math.round((startMs / 1000) * 30); // FPS is 30

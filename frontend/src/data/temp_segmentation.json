@@ -1,57 +1,37 @@
 [
   {
-    "surah": 45,
-    "ayah": 23,
+    "surah": 4,
+    "ayah": 1,
     "mappings": [
       {
         "part": 1,
-        "translation_text": "(Ey Muhammed!) Hevâ ve hevesini kendine ilâh edinen, Allah'ın kendi ilmi dahilinde saptırdığı, ",
-        "arabic_unit_count": 9
+        "translation_text": "Ey İnsanlar!",
+        "arabic_unit_count": 18
       },
       {
         "part": 2,
-        "translation_text": "kulağını ve kalbini mühürleyip gözüne perde çektiği kimseyi görüyor musun?",
-        "arabic_unit_count": 8
+        "translation_text": "Sizi bir tek nefisten yaratan, ondan eşini var eden ve ikisinden pek çok erkek ve kadın meydana getiren Rabb'inize hürmetsizlikten sakının.",
+        "arabic_unit_count": 7
       },
       {
-        "part": 4,
-        "translation_text": "Şimdi onu Allah'tan başka kim hidâyete erdirebilir?",
+        "part": 3,
+        "translation_text": "Kendisi adına birbirinizden dilekte bulunduğunuz Allah'ın ve akrabanın haklarına riayetsizliktende sakının. Allah şüphesiz hepinizi görüp gözetmektedir. ",
         "arabic_unit_count": 6
-      },
-      {
-        "part": 4,
-        "translation_text": "Hala düşünmez misiniz?",
-        "arabic_unit_count": 3
       }
     ]
   },
   {
-    "surah": 45,
-    "ayah": 24,
+    "surah": 4,
+    "ayah": 2,
     "mappings": [
       {
         "part": 1,
-        "translation_text": "Hem müşrikler dediler ki: \"Hayat, ancak bu dünya hayatımızdan ibarettir.",
-        "arabic_unit_count": 6
+        "translation_text": "Yetimlere mallarını verin.",
+        "arabic_unit_count": 15
       },
       {
         "part": 2,
-        "translation_text": "Ölürüz ve yaşarız.",
-        "arabic_unit_count": 2
-      },
-      {
-        "part": 3,
-        "translation_text": "Bizi ancak geçen zaman yokluğa sürükler.",
-        "arabic_unit_count": 5
-      },
-      {
-        "part": 4,
-        "translation_text": "Halbuki onların bu hususta hiçbir bilgileri yoktur.",
-        "arabic_unit_count": 6
-      },
-      {
-        "part": 5,
-        "translation_text": "Onlar, sadece böyle zannederler.\"",
+        "translation_text": "Temizi murdara değişmeyin, onların mallariyle kendi mallarınızı karıştırarak yemeyin, çünkü bu büyük bir suçtur.",
         "arabic_unit_count": 5
       }
     ]
