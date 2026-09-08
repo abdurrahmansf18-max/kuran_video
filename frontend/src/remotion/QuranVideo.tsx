@@ -558,94 +558,24 @@ export function QuranVideo({
                   : Math.round((mapping.arabic_unit_count / totalUnits) * d);
 
                 if ((!globalAudioPath || isAudioExtracted) && verse.wordTimings && verse.wordTimings.length > 0) {
-                  // Robust word matching (Text-Matching) to avoid index shifting caused by Whisper skipping/merging words.
-                  const cleanArabic = (str: string) => {
-                    return (str || "")
-                      .replace(/[\u0617-\u061A\u064B-\u0652\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED]/g, "") // remove tashkeel
-                      .replace(/[^\w\s\u0600-\u06FF]/g, "") // remove punctuation
-                      .replace(/\s+/g, ""); // remove spaces
-                  };
-
-                  const timingsAligned = new Array(allWords.length).fill(null);
-                  let tIdx = 0;
-                  let matchedCount = 0;
-                  for (let i = 0; i < allWords.length; i++) {
-                    const wordClean = cleanArabic(allWords[i]);
-                    // Skip null/empty strings
-                    if (!wordClean) continue;
-                    
-                    for (let lookAhead = 0; lookAhead <= 2; lookAhead++) {
-                      if (tIdx + lookAhead < verse.wordTimings.length) {
-                        const timingClean = cleanArabic(verse.wordTimings[tIdx + lookAhead].w);
-                        if (timingClean === wordClean || timingClean.includes(wordClean) || wordClean.includes(timingClean)) {
-                          // Base match found
-                          let matchedTiming = { ...verse.wordTimings[tIdx + lookAhead] };
-                          let consumed = 1;
-                          
-                          // If Whisper split a long word (e.g. "الضالين" -> "الضا", "لين"), 
-                          // try to consume the next Whisper fragments to capture the full audio duration.
-                          let accumulatedText = timingClean;
-                          while (
-                            accumulatedText.length < wordClean.length && 
-                            tIdx + lookAhead + consumed < verse.wordTimings.length
-                          ) {
-                            const nextFragmentClean = cleanArabic(verse.wordTimings[tIdx + lookAhead + consumed].w);
-                            const remainingExpected = wordClean.substring(accumulatedText.length);
-                            
-                            // Only consume if the next Whisper fragment actually matches the remaining expected text!
-                            if (remainingExpected.startsWith(nextFragmentClean) || nextFragmentClean.includes(remainingExpected)) {
-                                accumulatedText += nextFragmentClean;
-                                matchedTiming.end = verse.wordTimings[tIdx + lookAhead + consumed].end;
-                                consumed++;
-                            } else {
-                                // Whisper skipped the remaining part and moved to another word. Break to avoid eating the next word!
-                                break;
-                            }
-                          }
-
-                          timingsAligned[i] = matchedTiming;
-                          tIdx = tIdx + lookAhead + consumed; // Advance pointer past all consumed fragments
-                          foundMatch = true;
-                          matchedCount++;
-                          break;
-                        }
-                      }
-                    }
-                    if (!foundMatch) {
-                      // If we didn't find a match, we just leave it null. It will be backfilled later.
-                    }
-                  }
-
-                  // Backfill nulls (skipped words) with nearest valid timing
-                  for (let i = 0; i < timingsAligned.length; i++) {
-                    if (timingsAligned[i] === null) {
-                      if (i > 0 && timingsAligned[i - 1]) {
-                        timingsAligned[i] = { ...timingsAligned[i - 1] };
-                      } else {
-                        let nextValid = verse.wordTimings[0];
-                        for (let j = i + 1; j < timingsAligned.length; j++) {
-                          if (timingsAligned[j]) { nextValid = timingsAligned[j]; break; }
-                        }
-                        timingsAligned[i] = { ...nextValid };
-                      }
-                    }
-                  }
-
-                  const startWordIdx = previousUnits;
-                  const endWordIdx = Math.min(previousUnits + mapping.arabic_unit_count - 1, allWords.length - 1);
-
-                  // Only apply word timings if we actually matched at least one word
-                  if (matchedCount > 0 && startWordIdx < timingsAligned.length) {
-                    const startMs = timingsAligned[startWordIdx].start;
-                    
-                    let nextStartMs = timingsAligned[endWordIdx].end; // Fallback
-                    for (let j = endWordIdx + 1; j < timingsAligned.length; j++) {
-                      if (timingsAligned[j].start > timingsAligned[endWordIdx].start) {
-                        nextStartMs = timingsAligned[j].start;
-                        break;
-                      }
-                    }
-
+                  // Since verse.text contains PUA codes and verse.wordTimings contains standard Arabic, string matching fails.
+                  // We map the PUA word indices proportionally to the whisper word indices.
+                  const startFraction = previousUnits / totalUnits;
+                  const endFraction = (previousUnits + mapping.arabic_unit_count) / totalUnits;
+                  
+                  const startW = Math.floor(startFraction * verse.wordTimings.length);
+                  let endW = Math.floor(endFraction * verse.wordTimings.length) - 1;
+                  
+                  // Ensure bounds
+                  if (endW >= verse.wordTimings.length) endW = verse.wordTimings.length - 1;
+                  if (endW < startW) endW = startW;
+                  
+                  if (startW < verse.wordTimings.length && endW < verse.wordTimings.length) {
+                    const startMs = verse.wordTimings[startW].start;
+                    const nextStartMs = endW + 1 < verse.wordTimings.length 
+                      ? verse.wordTimings[endW + 1].start 
+                      : verse.wordTimings[endW].end;
+                      
                     chunkStartFrame = Math.round((startMs / 1000) * 30); // FPS is 30
                     chunkDuration = Math.max(1, Math.round(((nextStartMs - startMs) / 1000) * 30));
 
