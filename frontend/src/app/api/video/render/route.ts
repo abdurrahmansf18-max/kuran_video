@@ -297,7 +297,6 @@ export async function POST(req: Request) {
     }
 
     const customAudio = formData.get("customAudio") as File | null;
-    const usePreparedAudio = formData.get("usePreparedAudio") === "true";
     const preparedAudioLocalPath = formData.get("preparedAudioLocalPath") as string;
     const preparedJsonStr = formData.get("preparedJsonData") as string;
     const trimStart = Number(formData.get("trimStart")) || 0;
