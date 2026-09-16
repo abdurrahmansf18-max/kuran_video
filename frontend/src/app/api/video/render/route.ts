@@ -217,8 +217,9 @@ export async function POST(req: Request) {
     const reciterName = formData.get("reciterName") as string;
     const translationId = formData.get("translationId") as string || "diyanet_yeni";
     const textScale = Math.max(0.5, Math.min(3, Number(formData.get("textScale")) || 1)) * 1.5;
+    const usePreparedAudio = formData.get("usePreparedAudio") === "true";
 
-    if (!RECITERS[reciterId]) {
+    if (!RECITERS[reciterId] && !usePreparedAudio) {
       return NextResponse.json({ error: "Unsupported reciter" }, { status: 400 });
     }
 
