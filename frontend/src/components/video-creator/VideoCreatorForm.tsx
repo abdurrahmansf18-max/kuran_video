@@ -1012,7 +1012,7 @@ export default function VideoCreatorForm() {
                   <div className="rounded-xl border border-dashed border-border/60 bg-surface/30 p-6 text-center hover:bg-surface/50 transition-colors">
                     <input 
                       type="file" 
-                      accept="audio/mp3,audio/wav,audio/m4a" 
+                      accept="audio/*,video/*,.mp3,.wav,.m4a,.mp4,.webm,.ogg" 
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
@@ -1032,7 +1032,7 @@ export default function VideoCreatorForm() {
                       </div>
                       <div>
                         <p className="font-medium text-foreground">{customAudio ? customAudio.name : (isArabic ? "اضغط لرفع ملف صوتي" : "Ses dosyası yüklemek için tıklayın")}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{isArabic ? "MP3, WAV, M4A" : "MP3, WAV, M4A"}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{isArabic ? "MP3, M4A, WAV, MP4, WEBM" : "MP3, M4A, WAV, MP4, WEBM"}</p>
                       </div>
                     </label>
                   </div>
