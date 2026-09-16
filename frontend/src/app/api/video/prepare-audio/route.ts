@@ -55,6 +55,8 @@ export async function POST(req: Request) {
     const endVerse = Number(formData.get("endVerse"));
     const reciterId = formData.get("reciterId") as string || "mishary_alafasy";
     const customAudio = formData.get("customAudio") as File | null;
+    const preTrimStartStr = formData.get("preTrimStart") as string | null;
+    const preTrimEndStr = formData.get("preTrimEnd") as string | null;
     const padSeconds = Number(formData.get("padSeconds")) || 2.0;
 
     if (!Number.isInteger(surahId) || !Number.isInteger(startVerse) || !Number.isInteger(endVerse)) {
@@ -82,7 +84,46 @@ export async function POST(req: Request) {
       backendFormData.append("start", startVerse.toString());
       backendFormData.append("end", endVerse.toString());
       backendFormData.append("pad_seconds", padSeconds.toString());
-      backendFormData.append("audio_file", customAudio);
+      
+      let finalAudioBlob: Blob = customAudio;
+      
+      // If pre-trimming is requested, trim it using ffmpeg before sending to backend
+      if (preTrimStartStr || preTrimEndStr) {
+        const { exec } = require('child_process');
+        const util = require('util');
+        const execAsync = util.promisify(exec);
+        const os = require('os');
+        const fsSync = require('fs');
+        
+        const tempId = Date.now() + Math.random().toString(36).slice(2);
+        const inputPath = path.join(os.tmpdir(), `input_${tempId}.tmp`);
+        const outputPath = path.join(os.tmpdir(), `output_${tempId}.mp3`);
+        
+        try {
+          const buffer = Buffer.from(await customAudio.arrayBuffer());
+          await fs.writeFile(inputPath, buffer);
+          
+          let ffmpegCmd = `ffmpeg -y -i "${inputPath}"`;
+          if (preTrimStartStr) ffmpegCmd += ` -ss ${preTrimStartStr}`;
+          if (preTrimEndStr) ffmpegCmd += ` -to ${preTrimEndStr}`;
+          ffmpegCmd += ` -c:v copy -c:a libmp3lame -q:a 2 "${outputPath}"`;
+          
+          console.log("[Pre-Trim] Running:", ffmpegCmd);
+          await execAsync(ffmpegCmd);
+          
+          const trimmedBuffer = await fs.readFile(outputPath);
+          finalAudioBlob = new Blob([trimmedBuffer], { type: "audio/mpeg" });
+          console.log("[Pre-Trim] Success. Original size:", customAudio.size, "Trimmed size:", finalAudioBlob.size);
+        } catch (err) {
+          console.error("[Pre-Trim] FFmpeg error:", err);
+          return NextResponse.json({ error: "Ön kesim işlemi başarısız oldu. Saat/Dakika formatını kontrol edin." }, { status: 400 });
+        } finally {
+          try { if (fsSync.existsSync(inputPath)) await fs.rm(inputPath); } catch (e) {}
+          try { if (fsSync.existsSync(outputPath)) await fs.rm(outputPath); } catch (e) {}
+        }
+      }
+
+      backendFormData.append("audio_file", finalAudioBlob, customAudio.name);
 
       const extractRes = await axios.post(`${baseUrl}/api/extraction/custom`, backendFormData, {
         timeout: 1800000, // 30 minutes timeout for heavy Whisper processing

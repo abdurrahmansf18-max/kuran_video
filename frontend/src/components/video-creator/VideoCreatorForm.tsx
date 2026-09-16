@@ -95,6 +95,8 @@ export default function VideoCreatorForm() {
   const [aiRetries, setAiRetries] = useState(0);
   const [customAudio, setCustomAudio] = useState<File | null>(null);
   const [audioSourceMode, setAudioSourceMode] = useState<"reciter" | "custom">("reciter");
+  const [preTrimStart, setPreTrimStart] = useState("");
+  const [preTrimEnd, setPreTrimEnd] = useState("");
 
   const [segmentationProgress, setSegmentationProgress] = useState<string | null>(null);
   const [showManualEditor, setShowManualEditor] = useState(false);
@@ -133,6 +135,8 @@ export default function VideoCreatorForm() {
       if (reciterObj) formData.append("reciterName", reciterObj.name);
       if (audioSourceMode === "custom" && customAudio) {
         formData.append("customAudio", customAudio);
+        if (preTrimStart) formData.append("preTrimStart", preTrimStart);
+        if (preTrimEnd) formData.append("preTrimEnd", preTrimEnd);
       }
       // Add 10.0s padding so the user can use the AudioTrimmer UI to expand the selection if needed
       formData.append("padSeconds", "10.0");
@@ -1033,6 +1037,37 @@ export default function VideoCreatorForm() {
                     </label>
                   </div>
                   
+                  {customAudio && (
+                    <div className="flex gap-4 p-4 rounded-xl bg-surface/30 border border-border/50">
+                      <div className="flex-1 space-y-1">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          {isArabic ? "البداية (مثال: 01:23)" : "Ön Kesim Başlangıç (örn: 01:23)"}
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="00:00"
+                          value={preTrimStart}
+                          onChange={(e) => { setPreTrimStart(e.target.value); setPreparedAudioUrl(null); }}
+                          className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
+                          dir="ltr"
+                        />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          {isArabic ? "النهاية (مثال: 02:45)" : "Ön Kesim Bitiş (örn: 02:45)"}
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="00:00"
+                          value={preTrimEnd}
+                          onChange={(e) => { setPreTrimEnd(e.target.value); setPreparedAudioUrl(null); }}
+                          className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
+                          dir="ltr"
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   {/* Provide a way to tag the reciter name for the UI */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-muted-foreground">
