@@ -970,6 +970,24 @@ export default function VideoCreatorForm() {
             </h2>
 
             <div className="flex flex-col gap-4">
+              <div className="flex rounded-xl bg-muted/50 p-1 mb-2">
+                <button
+                  type="button"
+                  onClick={() => { setAudioSourceMode("reciter"); setCustomAudio(null); setPreparedAudioUrl(null); setPreparedJsonData(null); }}
+                  className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${audioSourceMode === "reciter" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  {isArabic ? "قائمة القراء" : "Hazır Kari Listesi"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setAudioSourceMode("custom"); setPreparedAudioUrl(null); setPreparedJsonData(null); }}
+                  className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${audioSourceMode === "custom" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  {isArabic ? "رفع صوت خاص" : "Kendi Sesini Yükle"}
+                </button>
+              </div>
+
+              {audioSourceMode === "reciter" ? (
                 <DropdownSelect
                   placeholder={isArabic ? "مشاري راشد العفاسي" : "Mishary Rashed Alafasy"}
                   options={RECITER_OPTIONS.map(r => ({ value: r.id, label: isArabic ? r.arName : r.name }))}
@@ -985,6 +1003,55 @@ export default function VideoCreatorForm() {
                   }}
                   isRtl={isArabic}
                 />
+              ) : (
+                <div className="space-y-4">
+                  <div className="rounded-xl border border-dashed border-border/60 bg-surface/30 p-6 text-center hover:bg-surface/50 transition-colors">
+                    <input 
+                      type="file" 
+                      accept="audio/mp3,audio/wav,audio/m4a" 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setCustomAudio(file);
+                          setPreparedAudioUrl(null);
+                          setPreparedJsonData(null);
+                          setVideoUrl(null);
+                          setRenderState("idle");
+                        }
+                      }}
+                      className="hidden" 
+                      id="custom-audio-upload" 
+                    />
+                    <label htmlFor="custom-audio-upload" className="cursor-pointer flex flex-col items-center gap-3">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <MusicalNoteIcon className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">{customAudio ? customAudio.name : (isArabic ? "اضغط لرفع ملف صوتي" : "Ses dosyası yüklemek için tıklayın")}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{isArabic ? "MP3, WAV, M4A" : "MP3, WAV, M4A"}</p>
+                      </div>
+                    </label>
+                  </div>
+                  
+                  {/* Provide a way to tag the reciter name for the UI */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">
+                      {isArabic ? "من هو القارئ؟ (للعرض فقط)" : "Kari Kim? (Sadece ekranda görünmesi için)"}
+                    </label>
+                    <DropdownSelect
+                      placeholder={isArabic ? "اختر أو اكتب اسم القارئ..." : "Kari seçin veya yazın..."}
+                      options={[
+                        { value: "islam_sobhi", label: isArabic ? "إسلام صبحي" : "İslam Sobhi" },
+                        { value: "mohammed_dibirov", label: isArabic ? "محمد ديبيروف" : "Mohammed Dibirov" },
+                        ...RECITER_OPTIONS.map(r => ({ value: r.id, label: isArabic ? r.arName : r.name }))
+                      ]}
+                      value={selectedReciter}
+                      onChange={(val) => setSelectedReciter(val as string)}
+                      isRtl={isArabic}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </section>
 

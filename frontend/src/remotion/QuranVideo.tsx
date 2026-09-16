@@ -49,14 +49,12 @@ const FONT_SURAH_NAME_FAMILY = "Ruqaa";
 const FONT_TRANSLITERATION_PATH = "fonts/video-fonts/Sansita-Bold.ttf";
 const FONT_TRANSLITERATION_FAMILY = "Sansita";
 
-const FONT_TRANSLATION_PATH = "fonts/video-fonts/Aileron-Thin.otf";
-const FONT_TRANSLATION_FAMILY = "Aileron Thin";
-
-const TRANSLATION_FONT_SIZE = 30;
-const TRANSLATION_LINE_HEIGHT = 1.625;
+const TRANSLATION_FONT_SIZE = 34;
+const TRANSLATION_LINE_HEIGHT = 1.5;
 const TRANSLATION_COLOR = "white";
-const TRANSLATION_MARGIN_TOP = 10;
-const TRANSLATION_FONT_FAMILY = `${FONT_TRANSLATION_FAMILY}, Arial, sans-serif`;
+const TRANSLATION_MARGIN_TOP = 15;
+const TRANSLATION_FONT_FAMILY = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const TRANSLATION_FONT_WEIGHT = 600;
 
 const TEXT_SHADOW = "0 1px 2px rgba(0,0,0,0.6), 0 0 6px rgba(0,0,0,0.4)";
 const TEXT_SHADOW_STRONG = "0 2px 4px rgba(0,0,0,0.7), 0 0 12px rgba(0,0,0,0.4)";
@@ -361,9 +359,11 @@ function VerseScene({
               color: TRANSLATION_COLOR,
               fontFamily: TRANSLATION_FONT_FAMILY,
               fontSize: Math.round(TRANSLATION_FONT_SIZE * textScale),
+              fontWeight: TRANSLATION_FONT_WEIGHT,
               lineHeight: TRANSLATION_LINE_HEIGHT,
               marginTop: TRANSLATION_MARGIN_TOP,
               width: "100%",
+              textShadow: TEXT_SHADOW_STRONG,
             }}
           >
             {showNumber && `${verseId}. `}{formatInvertedPyramid(translation, true, textScale, showNumber ? `${verseId}. `.length : 0)}
@@ -464,7 +464,7 @@ export function QuranVideo({
       ),
       document.fonts.load(`${Math.round(SURAH_NAME_FONT_SIZE * textScale)}px "${FONT_SURAH_NAME_FAMILY}"`),
       document.fonts.load(`${Math.round(TRANSLITERATION_FONT_SIZE * textScale)}px "${FONT_TRANSLITERATION_FAMILY}"`),
-      document.fonts.load(`${Math.round(TRANSLATION_FONT_SIZE * textScale)}px "${FONT_TRANSLATION_FAMILY}"`),
+
       document.fonts.ready,
     ])
       .catch(() => undefined)

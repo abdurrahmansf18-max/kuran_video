@@ -216,7 +216,7 @@ export async function POST(req: Request) {
     const reciterId = (formData.get("reciterId") || "mishary_alafasy") as keyof typeof RECITERS;
     const reciterName = formData.get("reciterName") as string;
     const translationId = formData.get("translationId") as string || "diyanet_yeni";
-    const textScale = Math.max(0.5, Math.min(3, Number(formData.get("textScale")) || 1));
+    const textScale = Math.max(0.5, Math.min(3, Number(formData.get("textScale")) || 1)) * 1.5;
 
     if (!RECITERS[reciterId]) {
       return NextResponse.json({ error: "Unsupported reciter" }, { status: 400 });
@@ -830,8 +830,8 @@ export async function POST(req: Request) {
 
     const composition: VideoConfig = {
       id: "QuranVideo",
-      width: 720,
-      height: 1280,
+      width: 1080,
+      height: 1920,
       fps: 30,
       durationInFrames: totalDurationInFrames,
       defaultProps: inputProps as Record<string, unknown>,
@@ -852,10 +852,9 @@ export async function POST(req: Request) {
       inputProps,
       overwrite: true,
       timeoutInMilliseconds: 600000,
-      videoBitrate: "3M",
-      x264Preset: "ultrafast",
-      imageFormat: "jpeg",
-      jpegQuality: 85,
+      videoBitrate: "15M",
+      x264Preset: "fast",
+      imageFormat: "png",
       concurrency: 8,
 
       chromiumOptions: {
