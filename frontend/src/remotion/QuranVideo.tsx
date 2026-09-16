@@ -426,12 +426,6 @@ function PageFontStyles({ verses }: { verses: QuranVideoProps["verses"] }) {
         font-weight: 700;
         font-display: swap;
       }
-      @font-face {
-        font-family: "${FONT_TRANSLATION_FAMILY}";
-        src: url("${staticFile(FONT_TRANSLATION_PATH)}") format("opentype");
-        font-weight: 300;
-        font-display: swap;
-      }
       ${fontFaces}
       body {
         text-rendering: auto;
