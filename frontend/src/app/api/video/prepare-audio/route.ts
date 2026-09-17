@@ -55,8 +55,17 @@ export async function POST(req: Request) {
     const endVerse = Number(formData.get("endVerse"));
     const reciterId = formData.get("reciterId") as string || "mishary_alafasy";
     const customAudio = formData.get("customAudio") as File | null;
-    const preTrimStartStr = formData.get("preTrimStart") as string | null;
-    const preTrimEndStr = formData.get("preTrimEnd") as string | null;
+    let preTrimStartStr = formData.get("preTrimStart") as string | null;
+    let preTrimEndStr = formData.get("preTrimEnd") as string | null;
+    
+    // Auto-correct common user mistake: using dot instead of colon for mm:ss
+    // If they write "11.15" and there is no colon, convert it to "11:15"
+    if (preTrimStartStr && preTrimStartStr.includes('.') && !preTrimStartStr.includes(':')) {
+        preTrimStartStr = preTrimStartStr.replace('.', ':');
+    }
+    if (preTrimEndStr && preTrimEndStr.includes('.') && !preTrimEndStr.includes(':')) {
+        preTrimEndStr = preTrimEndStr.replace('.', ':');
+    }
     const padSeconds = Number(formData.get("padSeconds")) || 2.0;
 
     if (!Number.isInteger(surahId) || !Number.isInteger(startVerse) || !Number.isInteger(endVerse)) {

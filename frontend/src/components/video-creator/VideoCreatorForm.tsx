@@ -1041,7 +1041,7 @@ export default function VideoCreatorForm() {
                     <div className="flex gap-4 p-4 rounded-xl bg-surface/30 border border-border/50">
                       <div className="flex-1 space-y-1">
                         <label className="text-xs font-medium text-muted-foreground">
-                          {isArabic ? "البداية (مثال: 01:23)" : "Ön Kesim Başlangıç (örn: 01:23)"}
+                          {isArabic ? "البداية (مثال: 01:23)" : "Ön Kesim Başlangıç (örn: 11:15)"}
                         </label>
                         <input
                           type="text"
@@ -1054,7 +1054,7 @@ export default function VideoCreatorForm() {
                       </div>
                       <div className="flex-1 space-y-1">
                         <label className="text-xs font-medium text-muted-foreground">
-                          {isArabic ? "النهاية (مثال: 02:45)" : "Ön Kesim Bitiş (örn: 02:45)"}
+                          {isArabic ? "النهاية (مثال: 02:45)" : "Ön Kesim Bitiş (örn: 12:04)"}
                         </label>
                         <input
                           type="text"
