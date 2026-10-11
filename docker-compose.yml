@@ -36,7 +36,6 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    restart: on-failure
 
   frontend:
     build:
@@ -77,7 +76,6 @@ services:
         target: /app/public/renders
         tmpfs:
           size: 512M
-    restart: on-failure
 
 volumes:
   postgres_data:
