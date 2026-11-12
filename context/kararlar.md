@@ -1,0 +1,28 @@
+# Proje Kararları
+
+Bu dosya kesinleşmiş ve gelecekteki çalışmaları etkileyecek kararları kaydeder. Geçici fikirler veya henüz onaylanmamış seçenekler buraya yazılmaz.
+
+| Tarih | Karar | Gerekçe | Durum | Etkilediği alanlar |
+|---|---|---|---|---|
+| 2026-11-09 | Proje kodları `kuran-video/` alt dizinine taşındı; şablon hafızası kök dizinde korundu | Şablon hafızası ile uygulama kodlarının temiz ayrımı ve çoklu modül yönetilebilirliği | Aktif | Kök dizin, `kuran-video/`, Docker Compose |
+| 2026-11-09 | Docker Compose proje adı `kuran_video` olarak sabitlendi | Dizin değişikliği sonrası postgres veritabanı hacminin (`kuran_video_postgres_data`) ve konteyner adlarının korunması | Aktif | `kuran-video/docker-compose.yml` |
+| 2026-11-09 | Frontend ve backend komutlarının Docker ortamı üzerinden yönetilmesi benimsendi | Host ortamında Node.js kurulu olmaması ve GPU/bağımlılık izolasyonu | Aktif | Geliştirme ve doğrulama süreçleri |
+| 2026-11-10 | Otomatik AI görsel oluşturma modülü tamamen kaldırıldı | Sistem karmaşıklığını azaltmak ve kullanıcı talebi doğrultusunda odaklanmış yapı kurmak | Aktif | Frontend (`VideoCreatorForm`, `api/ai`), Backend (`routers/ai`) |
+| 2026-11-10 | Yerel ses yükleme yerine bağlantı (YouTube vb.) üzerinden ses alma modeline geçildi | Kullanıcının harici platformlardan hızlı ses temin edebilmesini sağlamak | Aktif | Frontend ses girdi alanı, Backend indirme rotaları |
+| 2026-11-10 | Ses kesme aracı, mouse ile sürüklenebilir interaktif görsel zaman çizelgesine dönüştürüldü | Hassas ses aralığı seçimini sezgisel ve modern hale getirmek | Aktif | Frontend `AudioTrimmer` ve zamanlama bileşenleri |
+| 2026-11-10 | Ses ekleme bölümüne genişletilmiş kari listesi ve manuel hoca ismi girme seçeneği eklendi | Liste dışındaki farklı okuyucuların isimlerinin de video başlığına yansıtılabilmesi | Aktif | Frontend (`VideoCreatorForm.tsx`, `QuranVideo.tsx`), Video Render API |
+| 2026-11-10 | Türkçe meal metin boyutu Arapça ayet boyutuyla dengelendi / eşitlendi | Tipografik uyumsuzluğu ve orantısız metin görünümünü engellemek | Aktif | Remotion video şablonu (`QuranVideo.tsx`), Önizleme stilleri |
+| 2026-11-12 | Arka plan medyası için sessiz video (yerel yükleme veya YouTube/link ile getirme), sesle otomatik döngü (Loop) ve isteğe bağlı ortam sesi (yağmur vb.) koruma seçeneği eklendi | Statik görsel yerine dinamik video arka planı sağlamak, video süresini tilavetle eşitlemek ve yağmur/doğa seslerini tilavet arkasında isteğe bağlı koruyabilmek | Aktif | Frontend (`VideoCreatorForm.tsx`, `fetch-video`), Backend (`routers/extraction.py`), Remotion (`QuranVideo.tsx`, `types.ts`), Render API (`render/route.ts`) |
+| 2026-11-12 | Kuran ayeti ve Türkçe meal için çoklu font seçimi ve bağımsız boyut ayarlama kontrolleri eklendi | Kullanıcıların estetik tercihlerine göre Arapça hat türünü ve Türkçe meal yazı karakterini özelleştirebilmesini, okunabilirlik boyutunu ayarlayabilmesini sağlamak | Aktif | Frontend UI (`VideoCreatorForm.tsx`), Render API (`render/route.ts`), Remotion (`QuranVideo.tsx`, `types.ts`) |
+| 2026-11-12 | Ses-metin ve ayet bölümleme (chunk) senkronizasyonu Whisper VAD ve doğrudan kelime zamanlamasıyla yeniden yapılandırıldı | Farklı kârilerde ve dışarıdan eklenen seslerde Tajweed tecvid uzatmalarının (Madd) erken kesilmesini önlemek, ayet bitişlerinde ve uzun ayet geçişlerinde ekranın boş kalmasını ya da yazının sesten önce kaybolmasını tamamen engellemek | Aktif | Backend (`extract_precise_clip.py`), Frontend Render API (`render/route.ts`), Remotion (`QuranVideo.tsx`), `VideoCreatorForm.tsx` |
+| 2026-11-12 | Harici link ses kırpma durumu frontend ve backend seviyesinde izole edildi (`linkAudioTrimStart/End` & `is_pretrimmed`), AudioTrimmer aralık hesabı düzeltildi | Linkten ses getirme alanında kullanıcının fareyle kestiği aralığın, "Sesi Hazırla" adımında state çakışması veya kelime sınırlarına zorla daraltılma sebebiyle boyutunun değişmesini önlemek; kullanıcının seçtiği tam kesit boyutunu korumak | Aktif | Frontend (`VideoCreatorForm.tsx`, `AudioTrimmer.tsx`), Backend (`extraction.py`, `extract_precise_clip.py`) |
+| 2026-11-12 | Standart Arapça fontlar için yerel `quran_uthmani.json` veri seti entegre edildi | KFGQPC Medine Naskh, Uthmanic Hafs ve diğer standart fontlarda PUA kodlarının Presentation Forms-A çemberli rakamlara (١٤٨-١٥٥) dönüşmesini engellemek; standart fontlarda otantik Tanzil Uthmani metnini, Mushaf PUA modunda ise sayfa gliflerini eksiksiz render etmek | Aktif | Frontend (`data/quran_uthmani.json`, `render/route.ts`, `VideoCreatorForm.tsx`, `ManualSegmentationEditor.tsx`, `remotion/QuranVideo.tsx`), Backend (`scripts/data/quran_uthmani.json`) |
+| 2026-11-12 | Arka plan videoları render öncesinde FFmpeg ile tam tilavet süresine kesintisiz ön-döngüye (pre-loop) alındı | Remotion `<Loop>` bileşeninin video başa sararken yarattığı dekoder sıfırlaması, mikro takılmalar ve ses kopmalarını kalıcı olarak engellemek; sessiz videolarda ses kanalını (`-an`) tamamen temizlemek | Aktif | Frontend (`render/route.ts`, `remotion/QuranVideo.tsx`) |
+| 2026-11-12 | Proje C4 mimari modelleme standardına uygun olarak belgelendirildi | Sistemin bağlam (C1), konteyner (C2), bileşen (C3) ve kod/iş akışı (C4) katmanlarını açıkça standardize etmek ve sürdürülebilirliği artırmak | Aktif | `context/mimari/c4-modeli.md`, `context/README.md` |
+
+## Kullanım kuralları
+
+- Yeni kararları tarih ve kısa gerekçeyle ekleyin.
+- Bir karar değiştiğinde eski kaydı sessizce silmeyin; durumunu değiştirin ve yeni kararı ayrı kayıt olarak ekleyin.
+- `Durum` alanında `aktif`, `değiştirildi`, `iptal edildi` veya `tamamlandı` gibi açık ifadeler kullanın.
+- Yalnızca gelecekte tekrar bilinmesi gereken kararları kaydedin.

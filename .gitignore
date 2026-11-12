@@ -47,10 +47,15 @@ Thumbs.db
 
 # Project specific
 backend/data/
+**/backend/data/
 frontend/public/renders/temp_audio/
+**/frontend/public/renders/temp_audio/
 frontend/public/renders/temp_video/
+**/frontend/public/renders/temp_video/
 backend/.pytest_cache/
+**/backend/.pytest_cache/
 backend/ffmpeg/
+**/backend/ffmpeg/
 temp_api.json
 
 # Temporary output files
@@ -60,3 +65,11 @@ editions.json
 dummy.mp3
 out*.mp3
 backend/app/static/tmp/
+**/backend/app/static/tmp/
+*.tsbuildinfo
+**/temp_segmentation.json
+**/public/renders/*.mp4
+**/public/renders/temp_audio/
+**/public/render-assets/trimmed-audio/
+**/public/render-assets/background-videos/
+**/public/render-assets/backgrounds/

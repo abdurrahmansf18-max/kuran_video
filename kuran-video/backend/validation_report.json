@@ -1,0 +1,72 @@
+{
+  "run_at": "2026-11-10T16:13:18.008999Z",
+  "source": "Local quran.json + api.alquran.cloud/v1/quran/tr.yazir",
+  "validation_reference": "Tanzil.net — Standard Uthmani Quran counts",
+  "summary": {
+    "pass": 10,
+    "warn": 0,
+    "fail": 1,
+    "overall": "FAIL"
+  },
+  "checks": [
+    {
+      "check": "Surah count = 114",
+      "status": "PASS",
+      "detail": "Found 114"
+    },
+    {
+      "check": "Total ayah count = 6236",
+      "status": "PASS",
+      "detail": "Found 6236"
+    },
+    {
+      "check": "Surah IDs are sequential 1–114",
+      "status": "PASS",
+      "detail": "OK"
+    },
+    {
+      "check": "Per-surah ayah counts match Tanzil",
+      "status": "FAIL",
+      "detail": "Surah 96: expected 5, found 19; Surah 107: expected 5, found 7"
+    },
+    {
+      "check": "No duplicate (surah, ayah) pairs",
+      "status": "PASS",
+      "detail": "0 duplicates found"
+    },
+    {
+      "check": "No NULL text_arabic",
+      "status": "PASS",
+      "detail": "0 NULL values"
+    },
+    {
+      "check": "No NULL text_turkish",
+      "status": "PASS",
+      "detail": "0 NULL values"
+    },
+    {
+      "check": "All juz_number values in 1–30",
+      "status": "PASS",
+      "detail": "0 out-of-range values"
+    },
+    {
+      "check": "Sajdah markers complete",
+      "status": "PASS",
+      "detail": "15 found"
+    },
+    {
+      "check": "Audio URLs are absolute URLs",
+      "status": "PASS",
+      "detail": "Sample: https://everyayah.com/data/Alafasy_128kbps/001001.mp3"
+    },
+    {
+      "check": "Surah 1 Ayah 1 PUA string correct",
+      "status": "PASS",
+      "detail": "Match"
+    }
+  ],
+  "issues": [
+    "[FAIL] Per-surah ayah counts match Tanzil: Surah 96: expected 5, found 19; Surah 107: expected 5, found 7"
+  ],
+  "warnings": []
+}
