@@ -69,7 +69,7 @@ export default function AyahSearch({ onSelect, isArabic }: AyahSearchProps) {
   };
 
   return (
-    <div className="relative w-full mb-6" ref={wrapperRef} dir={isArabic ? "rtl" : "ltr"}>
+    <div className={`relative w-full mb-6 ${isOpen ? "z-50" : ""}`} ref={wrapperRef} dir={isArabic ? "rtl" : "ltr"}>
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <MagnifyingGlassIcon className={`h-5 w-5 text-muted-foreground ${isArabic ? 'right-3 left-auto' : 'left-3'}`} />
@@ -93,7 +93,7 @@ export default function AyahSearch({ onSelect, isArabic }: AyahSearchProps) {
       </div>
 
       {isOpen && results.length > 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-surface rounded-xl shadow-lg border border-border overflow-hidden max-h-80 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-2 bg-surface rounded-xl shadow-2xl border border-border overflow-hidden max-h-80 overflow-y-auto">
           <ul className="divide-y divide-border">
             {results.map((result) => (
               <li 

@@ -89,7 +89,7 @@ export default function DropdownSelect({
   }, [isOpen]);
 
   return (
-    <div ref={containerRef} className="relative space-y-2">
+    <div ref={containerRef} className={`relative space-y-2 ${isOpen ? "z-50" : ""}`}>
       {label && <label className="text-sm font-medium">{label}</label>}
 
       <div className="relative">
@@ -145,8 +145,8 @@ export default function DropdownSelect({
             transition={{ duration: 0.15, ease: "easeOut" }}
             className={[
               "absolute z-50 mt-1 w-full min-w-[240px]",
-              "rounded-xl border border-border bg-surface shadow-lg overflow-hidden",
-              "origin-top flex flex-col p-1.5",
+              "rounded-xl border border-border bg-surface shadow-2xl overflow-hidden",
+              "origin-top flex flex-col p-1.5 backdrop-blur-md",
             ].join(" ")}
             role="listbox"
           >

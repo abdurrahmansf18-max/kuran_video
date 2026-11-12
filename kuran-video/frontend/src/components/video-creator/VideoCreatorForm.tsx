@@ -987,7 +987,7 @@ export default function VideoCreatorForm() {
         {/* ─── Workflow Stepper Navigation ─── */}
         <nav 
           aria-label="Workflow Stepper"
-          className="sticky top-4 z-30 rounded-2xl border border-border/80 bg-surface/90 p-2 md:p-3 shadow-lg backdrop-blur-md transition-all duration-300"
+          className="sticky top-4 z-50 rounded-2xl border border-border/80 bg-surface/90 p-2 md:p-3 shadow-lg backdrop-blur-md transition-all duration-300"
         >
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
             {workflowSteps.map((s) => {
@@ -1029,7 +1029,7 @@ export default function VideoCreatorForm() {
         {/* ─── STEP 1: Sure ve Ayet Seçimi ─── */}
         <section
           id="step-1"
-          className="rounded-2xl border border-border/80 bg-surface/80 backdrop-blur-sm p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-primary/40 space-y-6 scroll-mt-24"
+          className="relative z-[30] focus-within:z-[45] rounded-2xl border border-border/80 bg-surface/80 backdrop-blur-sm p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-primary/40 space-y-6 scroll-mt-24"
         >
           {/* Card Header Standard */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border/60">
@@ -1065,7 +1065,7 @@ export default function VideoCreatorForm() {
           </div>
 
           {/* Ayah Search */}
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 relative z-30">
             <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
               <span>🔍</span>
               <span>{isArabic ? "البحث المباشر في القرآن الكريم:" : "Hızlı Ayet Arama:"}</span>
@@ -1085,7 +1085,7 @@ export default function VideoCreatorForm() {
           </div>
 
           {/* 3-Column Dropdowns */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 relative z-20">
             <DropdownSelect
               label={isArabic ? "السورة" : "Sure"}
               placeholder={isArabic ? "اختر السورة..." : "Sure seçin..."}
@@ -1168,7 +1168,7 @@ export default function VideoCreatorForm() {
 
           {/* Selected Verses Display & Controls */}
           {startVerse && endVerse && selectedSurah && (
-            <div className="space-y-4 rounded-xl border border-primary/20 bg-primary/[0.03] p-4 md:p-5 transition-all">
+            <div className="space-y-4 rounded-xl border border-primary/20 bg-primary/[0.03] p-4 md:p-5 transition-all relative z-10">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {isArabic ? "الآيات المحددة للفيديو:" : "Seçili Ayet Listesi:"}
@@ -1257,7 +1257,7 @@ export default function VideoCreatorForm() {
         {/* ─── STEP 2: Tilavet ve Ses Yönetimi ─── */}
         <section
           id="step-2"
-          className="rounded-2xl border border-border/80 bg-surface/80 backdrop-blur-sm p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-primary/40 space-y-6 scroll-mt-24"
+          className="relative z-[25] focus-within:z-[45] rounded-2xl border border-border/80 bg-surface/80 backdrop-blur-sm p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-primary/40 space-y-6 scroll-mt-24"
         >
           {/* Card Header Standard */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border/60">
@@ -1316,7 +1316,7 @@ export default function VideoCreatorForm() {
           </div>
 
           {audioSourceMode === "reciter" ? (
-            <div className="space-y-2">
+            <div className="space-y-2 relative z-20">
               <label className="text-sm font-semibold text-foreground">
                 {isArabic ? "القارئ" : "Tilavet Kârisi"}
               </label>
@@ -1433,7 +1433,7 @@ export default function VideoCreatorForm() {
               )}
 
               {/* Reciter Display Name Section */}
-              <div className="space-y-3 pt-3 border-t border-border/40">
+              <div className="space-y-3 pt-3 border-t border-border/40 relative z-20">
                 <label className="text-sm font-semibold text-foreground flex items-center gap-1.5">
                   <span>🎙️</span>
                   <span>{isArabic ? "اسم القارئ / الشيخ (سيظهر في أعلى الفيديو):" : "Okuyan / Hoca İsmi (Videoda görünecektir):"}</span>
@@ -1466,7 +1466,7 @@ export default function VideoCreatorForm() {
           )}
 
           {/* ─── Mandatory Audio Preparation Callout Box ─── */}
-          <div className="rounded-xl border border-primary/25 bg-gradient-to-r from-primary/[0.06] to-transparent p-5 space-y-3">
+          <div className="rounded-xl border border-primary/25 bg-gradient-to-r from-primary/[0.06] to-transparent p-5 space-y-3 relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex-1 space-y-1">
                 <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
@@ -1539,7 +1539,7 @@ export default function VideoCreatorForm() {
         {/* ─── STEP 3: Tipografi ve Hat Düzeni ─── */}
         <section
           id="step-3"
-          className="rounded-2xl border border-border/80 bg-surface/80 backdrop-blur-sm p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-primary/40 space-y-6 scroll-mt-24"
+          className="relative z-[20] focus-within:z-[45] rounded-2xl border border-border/80 bg-surface/80 backdrop-blur-sm p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-primary/40 space-y-6 scroll-mt-24"
         >
           {/* Card Header Standard */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border/60">
@@ -1568,9 +1568,9 @@ export default function VideoCreatorForm() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 relative z-10">
             {/* Arabic Verse Font Card */}
-            <div className="rounded-2xl border border-border/80 bg-surface/50 p-5 space-y-4 shadow-sm">
+            <div className="rounded-2xl border border-border/80 bg-surface/50 p-5 space-y-4 shadow-sm relative focus-within:z-20">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-bold text-foreground flex items-center gap-2">
                   <span>📖</span>
@@ -1623,7 +1623,7 @@ export default function VideoCreatorForm() {
             </div>
 
             {/* Translation Font Card */}
-            <div className="rounded-2xl border border-border/80 bg-surface/50 p-5 space-y-4 shadow-sm">
+            <div className="rounded-2xl border border-border/80 bg-surface/50 p-5 space-y-4 shadow-sm relative focus-within:z-20">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-bold text-foreground flex items-center gap-2">
                   <span>🇹🇷</span>
@@ -1681,7 +1681,7 @@ export default function VideoCreatorForm() {
         {/* ─── STEP 4: Arka Plan Medyası ve Atmosfer ─── */}
         <section
           id="step-4"
-          className="rounded-2xl border border-border/80 bg-surface/80 backdrop-blur-sm p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-primary/40 space-y-6 scroll-mt-24"
+          className="relative z-[15] focus-within:z-[45] rounded-2xl border border-border/80 bg-surface/80 backdrop-blur-sm p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-primary/40 space-y-6 scroll-mt-24"
         >
           {/* Card Header Standard */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border/60">
@@ -1995,7 +1995,7 @@ export default function VideoCreatorForm() {
         {/* ─── STEP 5: Video Üretimi ve İndirme ─── */}
         <section
           id="step-5"
-          className="rounded-2xl border border-border/80 bg-surface/80 backdrop-blur-sm p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-primary/40 space-y-6 scroll-mt-24"
+          className="relative z-[10] focus-within:z-[45] rounded-2xl border border-border/80 bg-surface/80 backdrop-blur-sm p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-primary/40 space-y-6 scroll-mt-24"
         >
           {/* Card Header Standard */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border/60">

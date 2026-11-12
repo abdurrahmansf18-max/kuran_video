@@ -37,7 +37,7 @@ export default function TranslationSelector({
     }));
 
   return (
-    <div className={`relative inline-block ${wrapperClass}`}>
+    <div className={`relative inline-block ${wrapperClass} focus-within:z-50`}>
       <DropdownSelect
         options={options}
         value={selectedTranslation.id}
