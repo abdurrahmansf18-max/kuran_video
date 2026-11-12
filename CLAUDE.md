@@ -32,6 +32,8 @@ Bu dosya projenin ana ve kalıcı çalışma talimatlarını içerir. Claude Cod
 ## Proje hafızasını güncel tutma
 
 - Bir görev sırasında hedef, karar, kural, kapsam, sınır veya başka bir kalıcı proje bilgisi açıkça değişirse ilgili bağlam dosyasını aynı görev içinde güncelle.
+- Yeni bir özellik, bileşen, servis veya iş akışı eklendiğinde veya değiştirildiğinde `context/mimari/c4-modeli.md` dosyasındaki C4 modeli (C1 Sistem Bağlamı, C2 Konteyner, C3 Bileşen veya C4 Kod seviyesi) mutlaka aynı görev içinde güncellenmeli ve diyagramlara işlenmelidir.
+- Eklenen her yeni kod parçası ve özellik, projenin mevcut yazılım mimarisine, frontend kart ve tasarım standartlarına ve backend servis mimarisine tam uyumlu olmalıdır.
 - Bir bilginin geçici mi kalıcı mı olduğu belirsizse bağlama eklemeden önce kullanıcıya sor.
 - Geçici konuşmaları, reddedilmiş seçenekleri ve doğrulanmamış varsayımları kalıcı bağlam olarak kaydetme.
 - Sohbetin tamamını bağlam dosyalarına kopyalama; yalnızca gelecekte tekrar kullanılacak kesinleşmiş bilgileri işle.
@@ -74,6 +76,18 @@ Bu dosya projenin ana ve kalıcı çalışma talimatlarını içerir. Claude Cod
 ### Proje yapısı ve çalışma alanı
 - Proje kaynak kodları `kuran-video/` alt dizinindedir; proje hafıza şablonu kök dizindedir (`CLAUDE.md`, `AGENTS.md`, `context/`).
 - Detaylı proje mimarisi, hedefler ve kararlar için her görevin başında `context/README.md` haritasını esas al.
+
+### Git branch stratejisi ve dağıtım düzeni
+- Projede görev türüne göre ayrılmış 3 ana çalışma branch'i ve 1 ana üretim branch'i bulunur:
+  - `features-and-updates`: Yeni özellikler, geliştirmeler, UI/UX standartlaştırması ve tasarım yenilikleri bu dalda geliştirilir ve buraya commitleyip pushlanır.
+  - `bug-fixes`: Hata ve arıza gidermeleri (bugfix) bu dalda yönetilir ve buraya commitleyip pushlanır.
+  - `development`: Tüm özellik ve düzeltmelerin entegre edilip birlikte test edildiği entegrasyon dalıdır.
+  - `main`: Kararlı ve yayına hazır ana sürüm dalıdır; doğrulanmış sürümler en son burada birleştirilir.
+  - Göreve başlarken ilgili branch'in aktif olduğu doğrulanmalı; commit ve push işlemleri doğru branch hedef alınarak yürütülmelidir.
+
+### Mimari yönetişim ve C4 modeli güncelleme protokolü
+- Projeye eklenecek her kod parçası ve yeni özellik, projenin mevcut yazılım mimarisine (frontend 5 adımlı standart kart mimarisi, backend FastAPI router/service yapısı, Remotion video render hattı) tam uyumlu şekilde geliştirilmelidir.
+- Yeni bir özellik veya akış eklendiğinde `context/mimari/c4-modeli.md` dosyasındaki ilgili C4 seviyesi (C1 Context, C2 Container, C3 Component veya C4 Code) güncellenerek hafıza şablonuna işlenmelidir. Gelecekteki tüm geliştirmeler bu kurallara göre ilerleyecektir.
 
 ### Komutlar ve ortam
 - Host ortamında Node.js kurulu değildir; tüm frontend ve backend komutları `kuran-video/` dizininde Docker Compose üzerinden yürütülmelidir:

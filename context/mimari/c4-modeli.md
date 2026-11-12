@@ -88,10 +88,20 @@ graph TB
 
 ### Frontend Bileşenleri (`kuran-video/frontend`)
 
+Frontend arayüzü, 5 adımlı standartlaştırılmış modüler kart mimarisi ve canlı akış navigasyonu (Workflow Stepper) ile organize edilmiştir:
+
 ```mermaid
 graph LR
-    subgraph UIComponents["Kullanıcı Arayüzü Bileşenleri"]
-        VCForm["VideoCreatorForm.tsx\n(Ana Kontrol ve Durum Yönetimi)"]
+    subgraph FrontendArchitecture["Frontend Arayüz Mimarisi (VideoCreatorForm)"]
+        Stepper["Workflow Stepper Bar\n(Canlı Durum Rozetleri & Hızlı Atlama)"]
+        Step1["Adım 1: Sure & Ayet\n(Canlı Arama, Sure, Aralık, Meal, Ayet Çipleri)"]
+        Step2["Adım 2: Tilavet & Ses\n(Kari / Link Sesi, Trimmer, Whisper VAD Hazırlığı)"]
+        Step3["Adım 3: Tipografi & Hat\n(Arapça & Meal Fontları, Boyut Slider, Canlı Önizleme)"]
+        Step4["Adım 4: Arka Plan\n(Video / Görsel, Otomatik Döngü, Ortam Sesi Kontrolü)"]
+        Step5["Adım 5: Video Üretimi\n(Yapılandırma Özeti, HD Render, Oynatıcı & İndirme)"]
+    end
+
+    subgraph UIComponents["Yardımcı Modüler Bileşenler"]
         ATrimmer["AudioTrimmer.tsx\n(Mouse ile Dalga Formu Kesici)"]
         MSEditor["ManualSegmentationEditor.tsx\n(Kelime Taşıma ve Parçalama)"]
         ASearch["AyahSearch.tsx\n(Canlı Ayet Arama)"]
@@ -113,17 +123,26 @@ graph LR
         RootComp["Root.tsx\n(Kompozisyon Kaydı)"]
     end
 
-    VCForm --> ATrimmer
-    VCForm --> MSEditor
-    VCForm --> ASearch
-    VCForm --> TSelector
-    VCForm --> R_Render
-    VCForm --> R_PrepAudio
-    VCForm --> R_TrimAudio
-    VCForm --> R_FetchVideo
-    VCForm --> R_FetchAudio
-    VCForm --> R_AutoSeg
-    VCForm --> R_Cleanup
+    Stepper --> Step1
+    Stepper --> Step2
+    Stepper --> Step3
+    Stepper --> Step4
+    Stepper --> Step5
+
+    Step1 --> ASearch
+    Step1 --> TSelector
+    Step1 --> MSEditor
+    Step1 --> R_AutoSeg
+
+    Step2 --> ATrimmer
+    Step2 --> R_FetchAudio
+    Step2 --> R_PrepAudio
+    Step2 --> R_TrimAudio
+
+    Step4 --> R_FetchVideo
+
+    Step5 --> R_Render
+    Step5 --> R_Cleanup
     R_Render --> RootComp
     RootComp --> QVideo
 ```
@@ -200,3 +219,19 @@ sequenceDiagram
     RenderRoute-->>UI: { success: true, videoUrl }
     UI-->>User: Videoyu oynat ve indir seçeneği sunulur
 ```
+
+---
+
+## C4 Modeli Yönetişim ve Senkronizasyon Protokolü
+
+Bu protokol, projenin mimari bütünlüğünü ve dokümantasyon güncelliğini kalıcı kılmak için zorunludur:
+
+1. **Katman Güncelleme Zorunluluğu**: Sisteme yeni bir özellik, servis, harici entegrasyon veya kod eklendiğinde; değişikliğin etkilediği C4 katmanı (C1 Context, C2 Container, C3 Component veya C4 Code) mutlaka tespit edilmeli ve bu dokümandaki diyagramlar ile metinler aynı görev içinde güncellenmelidir.
+2. **Mimari ve Kod Tasarım Uyumu**: Yeni kodlar, mevcut mimari şablona (Frontend 5 adımlı kart mimarisi, Backend FastAPI modüler router/service ayrımı, Docker konteyner izolasyonu) tam uyumlu olarak yazılmalıdır.
+3. **Branch Yönetimi Uyumu**:
+   - Yeni özellik ve geliştirmeler: `features-and-updates` branch'i
+   - Hata ve arıza gidermeleri: `bug-fixes` branch'i
+   - Entegrasyon ve ortak test: `development` branch'i
+   - Üretim ve ana sürüm: `main` branch'i
+   Tüm commit ve push işlemleri görevin doğasına uygun olan bu branch yapısına göre gerçekleştirilmelidir.
+
