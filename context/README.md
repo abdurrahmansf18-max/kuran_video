@@ -25,6 +25,7 @@ Bu dosya `context/` klasörünün ana haritasıdır. Proje bağlamını tek baş
 | `kurallar-ve-sinirlar.md` | Kalıcı kurallar, sınırlar, yasaklar ve yetki gerektiren alanlar | Her görevde |
 | `kararlar.md` | Kesinleşmiş kararlar, gerekçeleri ve durumları | Karar veya değişiklik öncesinde |
 | `mimari/c4-modeli.xml` | C1-C4 Seviyelerinde XML formatında sistem mimarisi, bileşen şemaları ve akışlar | Mimari inceleme ve geliştirme süreçlerinde |
+| `mimari/c4-modeli.drawio` | C1-C4 Seviyelerinde Draw.io formatında çok sekmeli görsel mimari diyagramı | VS Code Draw.io eklentisiyle görsel inceleme ve sunumlarda |
 | `kaynaklar/README.md` | Kaynak sisteminin kullanım ve düzenleme kuralları | Kaynak işlemlerinde |
 | `kaynaklar/kaynak-indeksi.md` | Projede bulunan gerçek kaynakların envanteri | Kanıt veya kaynak aranırken |
 | `kaynaklar/baglantilar.md` | İnternet ve çevrim içi kaynak kayıtları | Dış bağlantı gerektiğinde |

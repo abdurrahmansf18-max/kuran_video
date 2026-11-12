@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mxfile host="Electron" modified="2026-11-12T18:30:00.000Z" agent="Antigravity C4 Architecture Engine" version="21.6.8" type="device">
+  <diagram id="c1" name="C1 - Sistem Bağlamı">
+    <mxGraphModel dx="1422" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1250" pageHeight="900" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="c1_0"/>
+        <mxCell id="c1_1" parent="c1_0"/>
+        <mxCell id="c1_title" value="&amp;lt;b style='font-size: 18px; color: #0F172A;'&amp;gt;Kur&amp;#x27;an Video Projesi — C1: Sistem Bağlamı (System Context)&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;span style='font-size: 12px; color: #64748B;'&amp;gt;Kullanıcı, KuranNuru Video Creator Platformu ve harici veri sağlayıcıları arasındaki üst düzey ilişkiler.&amp;lt;/span&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="c1_1">
+          <mxGeometry x="40" y="25" width="1300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_user" value="&amp;lt;b&amp;gt;👤 Kullanıcı / İçerik Üreticisi&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 11px; font-weight: normal;'&amp;gt;[Kişi / Web Tarayıcısı]&amp;lt;br&amp;gt;Sure ve ayet seçer, tilavet, font ve arka plan belirleyerek video üretir.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0284C7;strokeColor=#0369A1;fontColor=#FFFFFF;fontStyle=1;arcSize=16;fontSize=13;shadow=1;" vertex="1" parent="c1_1">
+          <mxGeometry x="475" y="100" width="300" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_plat_group" value="KuranNuru Video Creator Platformu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#1E3A8A;fontSize=13;spacingTop=10;" vertex="1" parent="c1_1">
+          <mxGeometry x="440" y="260" width="370" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_kuran_system" value="&amp;lt;b&amp;gt;🕋 Kur'an Video Üretim Sistemi&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 11px; font-weight: normal;'&amp;gt;[Yazılım Sistemi - Next.js 14, Remotion 4, FastAPI]&amp;lt;br&amp;gt;Uçtan uca otomatik ve hassas Kur'an video üretim hattı.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1D4ED8;strokeColor=#1E40AF;fontColor=#FFFFFF;fontStyle=1;fontSize=13;shadow=1;" vertex="1" parent="c1_1">
+          <mxGeometry x="465" y="305" width="320" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_ext_group" value="Harici Servisler ve Veri Sağlayıcılar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#94A3B8;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#334155;fontSize=13;spacingTop=10;" vertex="1" parent="c1_1">
+          <mxGeometry x="50" y="520" width="1150" height="240" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_ext_youtube" value="&amp;lt;b&amp;gt;📺 YouTube / Linkler&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[Google / yt-dlp]&amp;lt;br&amp;gt;Harici ses ve arka plan doğa videoları temini.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#475569;strokeColor=#334155;fontColor=#FFFFFF;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="c1_1">
+          <mxGeometry x="75" y="575" width="205" height="145" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_ext_tanzil" value="&amp;lt;b&amp;gt;📖 Tanzil &amp;amp; Al-Quran Cloud&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[Harici API]&amp;lt;br&amp;gt;Otantik Uthmani mushaf metni ve sure meta verisi doğrulaması.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#475569;strokeColor=#334155;fontColor=#FFFFFF;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="c1_1">
+          <mxGeometry x="305" y="575" width="205" height="145" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_ext_qurancom" value="&amp;lt;b&amp;gt;🔍 Quran.com API v4&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[Harici REST API]&amp;lt;br&amp;gt;Kelime bazlı ayet arama sorguları ve sayfa glif kodları.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#475569;strokeColor=#334155;fontColor=#FFFFFF;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="c1_1">
+          <mxGeometry x="535" y="575" width="205" height="145" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_ext_mp3quran" value="&amp;lt;b&amp;gt;🎙️ Mp3Quran &amp;amp; EveryAyah&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[Harici CDN]&amp;lt;br&amp;gt;Kârilerin standart ayet MP3 tilavet dosyaları deposu.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#475569;strokeColor=#334155;fontColor=#FFFFFF;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="c1_1">
+          <mxGeometry x="765" y="575" width="205" height="145" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_ext_pollinations" value="&amp;lt;b&amp;gt;🤖 Pollinations AI&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[Harici AI API]&amp;lt;br&amp;gt;Uzun ayetlerin mantıksal ve estetik bölümleme önerileri.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#475569;strokeColor=#334155;fontColor=#FFFFFF;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="c1_1">
+          <mxGeometry x="995" y="575" width="185" height="145" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_e_u2k" value="Sure/Ayet seçer, font ayarlar, link verir, video üretir [HTTPS]" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c1_1" source="c1_user" target="c1_kuran_system">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_e_k2u" value="MP4 Video Çıktısı sunar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c1_1" source="c1_kuran_system" target="c1_user">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="350"/>
+              <mxPoint x="420" y="140"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c1_e_k2yt" value="Harici ses ve video çeker [yt-dlp]" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c1_1" source="c1_kuran_system" target="c1_ext_youtube">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_e_k2tz" value="Uthmani metin doğrulaması [REST]" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c1_1" source="c1_kuran_system" target="c1_ext_tanzil">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_e_k2qc" value="Ayet arama &amp;amp; tecvid durakları [REST]" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c1_1" source="c1_kuran_system" target="c1_ext_qurancom">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_e_k2mp3" value="Kari tilavetlerini indirir [HTTP]" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c1_1" source="c1_kuran_system" target="c1_ext_mp3quran">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_e_k2pol" value="Uzun ayet bölümleme [REST]" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c1_1" source="c1_kuran_system" target="c1_ext_pollinations">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="c2" name="C2 - Konteyner Mimarisi">
+    <mxGraphModel dx="1422" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1450" pageHeight="950" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="c2_0"/>
+        <mxCell id="c2_1" parent="c2_0"/>
+        <mxCell id="c2_title" value="&amp;lt;b style='font-size: 18px; color: #0F172A;'&amp;gt;Kur&amp;#x27;an Video Projesi — C2: Konteyner Mimarisi (Containers &amp;amp; Docker Network)&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;span style='font-size: 12px; color: #64748B;'&amp;gt;Frontend (Next.js/Remotion), Backend (FastAPI/Whisper), Veritabanı (PostgreSQL) ve Önbellek (Redis) konteynerleri.&amp;lt;/span&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="c2_1">
+          <mxGeometry x="40" y="25" width="1300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_user" value="&amp;lt;b&amp;gt;👤 Kullanıcı Tarayıcısı&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 11px; font-weight: normal;'&amp;gt;[Chrome, Safari, Firefox, Edge]&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0284C7;strokeColor=#0369A1;fontColor=#FFFFFF;fontStyle=1;arcSize=16;fontSize=13;shadow=1;" vertex="1" parent="c2_1">
+          <mxGeometry x="580" y="85" width="260" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_docker_box" value="Docker Compose Ortamı (kuran_video ağı)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#0F172A;fontSize=14;spacingTop=12;" vertex="1" parent="c2_1">
+          <mxGeometry x="40" y="190" width="1370" height="720" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_c_fe" value="Frontend Servisi (Port 3001 ➔ 3000)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;strokeWidth=1.5;verticalAlign=top;fontStyle=1;fontColor=#1E3A8A;fontSize=13;spacingTop=10;" vertex="1" parent="c2_1">
+          <mxGeometry x="70" y="240" width="440" height="440" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_next_app" value="&amp;lt;b&amp;gt;Next.js 14 App Router&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[React 18, Tailwind CSS, TypeScript]&amp;lt;br&amp;gt;5 Adımlı Video Creator Formu, API rotaları proxy'si.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2563EB;strokeColor=#1D4ED8;fontColor=#FFFFFF;fontSize=12;shadow=1;" vertex="1" parent="c2_1">
+          <mxGeometry x="95" y="285" width="390" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_remotion" value="&amp;lt;b&amp;gt;Remotion 4 Render Engine&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[Headless Chromium, Puppeteer]&amp;lt;br&amp;gt;Kare kare MP4 video kompozisyon derleyicisi.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3B82F6;strokeColor=#1D4ED8;fontColor=#FFFFFF;fontSize=12;shadow=1;" vertex="1" parent="c2_1">
+          <mxGeometry x="95" y="380" width="390" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_wavesurfer" value="&amp;lt;b&amp;gt;WaveSurfer.js&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[İnteraktif Dalga Formu]&amp;lt;br&amp;gt;Görsel ses kırpıcı.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60A5FA;strokeColor=#2563EB;fontColor=#FFFFFF;fontSize=11;" vertex="1" parent="c2_1">
+          <mxGeometry x="95" y="475" width="185" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_fe_storage" value="&amp;lt;b&amp;gt;Local Storage&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[/public/renders]&amp;lt;br&amp;gt;Statik video/ses deposu.&amp;lt;/font&amp;gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#93C5FD;strokeColor=#3B82F6;fontColor=#1E3A8A;fontSize=11;" vertex="1" parent="c2_1">
+          <mxGeometry x="300" y="475" width="185" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_c_be" value="Backend Servisi (Port 8002 ➔ 8000)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=1.5;verticalAlign=top;fontStyle=1;fontColor=#14532D;fontSize=13;spacingTop=10;" vertex="1" parent="c2_1">
+          <mxGeometry x="545" y="240" width="470" height="440" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_fastapi" value="&amp;lt;b&amp;gt;FastAPI 0.104+ Web API&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[Python 3.10, Uvicorn]&amp;lt;br&amp;gt;Modüler yönlendiriciler, VAD ses işleme API'leri.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16A34A;strokeColor=#15803D;fontColor=#FFFFFF;fontSize=12;shadow=1;" vertex="1" parent="c2_1">
+          <mxGeometry x="570" y="285" width="420" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_whisper" value="&amp;lt;b&amp;gt;faster-whisper &amp;amp; stable-ts (VAD)&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[OdyAsh/faster-whisper-base-ar-quran]&amp;lt;br&amp;gt;Tecvid uzatmalarını koruyan hassas kelime zamanlaması.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#22C55E;strokeColor=#16A34A;fontColor=#FFFFFF;fontSize=12;shadow=1;" vertex="1" parent="c2_1">
+          <mxGeometry x="570" y="380" width="420" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_ytdlp" value="&amp;lt;b&amp;gt;yt-dlp &amp;amp; FFmpeg&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[Medya İndirme &amp;amp; İşleme]&amp;lt;br&amp;gt;Harici linklerden klip ve ses temini.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4ADE80;strokeColor=#16A34A;fontColor=#14532D;fontSize=11;" vertex="1" parent="c2_1">
+          <mxGeometry x="570" y="475" width="200" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_be_storage" value="&amp;lt;b&amp;gt;Disk Deposu&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[/app/data/extracted_clips]&amp;lt;br&amp;gt;Kırpılan sesler ve önbellek.&amp;lt;/font&amp;gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#86EFAC;strokeColor=#22C55E;fontColor=#14532D;fontSize=11;" vertex="1" parent="c2_1">
+          <mxGeometry x="790" y="475" width="200" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_c_db" value="Veritabanı Servisi (Port 5434 ➔ 5432)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#9333EA;strokeWidth=1.5;verticalAlign=top;fontStyle=1;fontColor=#581C87;fontSize=13;spacingTop=10;" vertex="1" parent="c2_1">
+          <mxGeometry x="1050" y="240" width="320" height="205" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_postgres" value="&amp;lt;b&amp;gt;PostgreSQL 15 Relational DB&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[postgres_data volume]&amp;lt;br&amp;gt;Sureler, ayetler, mealler ve tecvid tabloları.&amp;lt;/font&amp;gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#9333EA;strokeColor=#7E22CE;fontColor=#FFFFFF;fontSize=11;shadow=1;" vertex="1" parent="c2_1">
+          <mxGeometry x="1075" y="290" width="270" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_c_rd" value="Önbellek Servisi (Port 6381 ➔ 6379)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF1F2;strokeColor=#E11D48;strokeWidth=1.5;verticalAlign=top;fontStyle=1;fontColor=#881337;fontSize=13;spacingTop=10;" vertex="1" parent="c2_1">
+          <mxGeometry x="1050" y="475" width="320" height="205" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_redis" value="&amp;lt;b&amp;gt;Redis 7 In-Memory Cache&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;[redis_data volume]&amp;lt;br&amp;gt;İşlem kuyrukları ve geçici istek önbellekleme.&amp;lt;/font&amp;gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#E11D48;strokeColor=#BE123C;fontColor=#FFFFFF;fontSize=11;shadow=1;" vertex="1" parent="c2_1">
+          <mxGeometry x="1075" y="525" width="270" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_u2n" value="HTTP / HTTPS (Port 3001)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_user" target="c2_next_app">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_n2f" value="İç Docker Ağı (http://backend:8000)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_next_app" target="c2_fastapi">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_n2r" value="Dahili Render Komutu" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_next_app" target="c2_remotion">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_n2w" value="Ses Manipülasyonu" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_next_app" target="c2_wavesurfer">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_n2s" value="Statik Dosya Okuma/Yazma" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_next_app" target="c2_fe_storage">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_f2db" value="SQLAlchemy ORM (Port 5432)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_fastapi" target="c2_postgres">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_f2rd" value="Önbellek &amp;amp; Kuyruk (Port 6379)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_fastapi" target="c2_redis">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_f2w" value="Model Çıkarımı (VAD)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_fastapi" target="c2_whisper">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_f2yt" value="Medya İndirme &amp;amp; Sıkıştırma" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_fastapi" target="c2_ytdlp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_f2bs" value="Geçici Ses/JSON Depolama" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_fastapi" target="c2_be_storage">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_e_r2u" value="MP4 Video İndirme API" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c2_1" source="c2_remotion" target="c2_user">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="50" y="417"/>
+              <mxPoint x="50" y="117"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="c3" name="C3 - Bileşen Mimarisi">
+    <mxGraphModel dx="1422" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1580" pageHeight="980" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="c3_0"/>
+        <mxCell id="c3_1" parent="c3_0"/>
+        <mxCell id="c3_title" value="&amp;lt;b style='font-size: 18px; color: #0F172A;'&amp;gt;Kur&amp;#x27;an Video Projesi — C3: Bileşen Mimarisi (Component Architecture)&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;span style='font-size: 12px; color: #64748B;'&amp;gt;Frontend 5 adımlı modüler kart mimarisi, UI bileşenleri, Next.js API rotaları ve Remotion motoru.&amp;lt;/span&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="c3_1">
+          <mxGeometry x="40" y="25" width="1300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_box_fe_arch" value="Frontend Arayüz Mimarisi (VideoCreatorForm)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#1E3A8A;fontSize=13;spacingTop=10;" vertex="1" parent="c3_1">
+          <mxGeometry x="40" y="95" width="360" height="830" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_stepper" value="&amp;lt;b&amp;gt;Workflow Stepper Bar (z-50)&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;Canlı Adım Rozetleri &amp;amp; Yapışkan Hızlı Gezinti&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1D4ED8;strokeColor=#1E40AF;fontColor=#FFFFFF;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="c3_1">
+          <mxGeometry x="65" y="140" width="310" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_step1" value="&amp;lt;b&amp;gt;Adım 1: Sure &amp;amp; Ayet Seçimi&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;Arama, 114 Sure, Aralık, Meal, Ayet Rozetleri&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;fontColor=#1E3A8A;fontStyle=1;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="65" y="230" width="310" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_step2" value="&amp;lt;b&amp;gt;Adım 2: Tilavet &amp;amp; Ses Ayarları&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;Kari / Link Sesi, Trimmer, Whisper VAD&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;fontColor=#1E3A8A;fontStyle=1;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="65" y="340" width="310" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_step3" value="&amp;lt;b&amp;gt;Adım 3: Tipografi &amp;amp; Hat Sanatı&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;Arapça/Türkçe Fontlar, Slider, Canlı Önizleme&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;fontColor=#1E3A8A;fontStyle=1;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="65" y="450" width="310" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_step4" value="&amp;lt;b&amp;gt;Adım 4: Arka Plan Medyası&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;Video/Resim, Otomatik Döngü, Ortam Sesi Kontrolü&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;fontColor=#1E3A8A;fontStyle=1;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="65" y="560" width="310" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_step5" value="&amp;lt;b&amp;gt;Adım 5: Video Üretimi &amp;amp; Çıktı&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px; font-weight: normal;'&amp;gt;Konfigürasyon Özeti, HD Render, İndirme Kartı&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;fontColor=#1E3A8A;fontStyle=1;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="65" y="670" width="310" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_box_ui_comp" value="Yardımcı Modüler Bileşenler" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#64748B;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#334155;fontSize=13;spacingTop=10;" vertex="1" parent="c3_1">
+          <mxGeometry x="430" y="95" width="340" height="830" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_comp_asearch" value="&amp;lt;b&amp;gt;AyahSearch.tsx&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Canlı arama &amp;amp; yüksek z-index'li açılır menü.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1F5F9;strokeColor=#475569;fontColor=#0F172A;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="455" y="160" width="290" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_comp_tselect" value="&amp;lt;b&amp;gt;TranslationSelector.tsx&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Diyanet, Elmalılı vb. meal kaynağı seçimi.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1F5F9;strokeColor=#475569;fontColor=#0F172A;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="455" y="260" width="290" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_comp_mseditor" value="&amp;lt;b&amp;gt;ManualSegmentationEditor.tsx&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Kelime taşıma ve görsel ayet bölümleme.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1F5F9;strokeColor=#475569;fontColor=#0F172A;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="455" y="360" width="290" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_comp_atrimmer" value="&amp;lt;b&amp;gt;AudioTrimmer.tsx&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;WaveSurfer ile fareyle dalga formu kırpıcı.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1F5F9;strokeColor=#475569;fontColor=#0F172A;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="455" y="460" width="290" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_comp_dropdown" value="&amp;lt;b&amp;gt;DropdownSelect.tsx&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Portal katmanlı, z-50 korumalı açılır kutu.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1F5F9;strokeColor=#475569;fontColor=#0F172A;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="455" y="560" width="290" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_box_api_routes" value="Next.js API Rotaları (/api)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#78350F;fontSize=13;spacingTop=10;" vertex="1" parent="c3_1">
+          <mxGeometry x="800" y="95" width="360" height="830" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_r_prepaudio" value="&amp;lt;b&amp;gt;/api/video/prepare-audio&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Ses hazırlama &amp;amp; Whisper kelime hizalama&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDE68A;strokeColor=#B45309;fontColor=#78350F;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="825" y="150" width="310" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_r_trimaudio" value="&amp;lt;b&amp;gt;/api/video/trim-audio&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;FFmpeg milisaniyelik ses kırpma rotası&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDE68A;strokeColor=#B45309;fontColor=#78350F;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="825" y="235" width="310" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_r_fetchaudio" value="&amp;lt;b&amp;gt;/api/video/fetch-audio&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;YouTube üzerinden harici tilavet sesi çekme&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDE68A;strokeColor=#B45309;fontColor=#78350F;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="825" y="320" width="310" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_r_fetchvideo" value="&amp;lt;b&amp;gt;/api/video/fetch-video&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;YouTube arka plan videosu indirme&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDE68A;strokeColor=#B45309;fontColor=#78350F;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="825" y="405" width="310" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_r_autoseg" value="&amp;lt;b&amp;gt;/api/segmentation/auto&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;AI destekli uzun ayet parçalama rotası&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDE68A;strokeColor=#B45309;fontColor=#78350F;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="825" y="490" width="310" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_r_render" value="&amp;lt;b&amp;gt;/api/video/render&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Pre-loop, Tanzil/PUA seçimi &amp;amp; Remotion derlemesi&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F59E0B;strokeColor=#B45309;fontColor=#FFFFFF;fontStyle=1;fontSize=11;shadow=1;" vertex="1" parent="c3_1">
+          <mxGeometry x="825" y="575" width="310" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_r_cleanup" value="&amp;lt;b&amp;gt;/api/video/cleanup&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Geçici render dosyalarını temizleme rotası&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDE68A;strokeColor=#B45309;fontColor=#78350F;fontSize=11;" vertex="1" parent="c3_1">
+          <mxGeometry x="825" y="670" width="310" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_box_remotion" value="Remotion Video Kompozisyonu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDE9FE;strokeColor=#7C3AED;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#4C1D95;fontSize=13;spacingTop=10;" vertex="1" parent="c3_1">
+          <mxGeometry x="1190" y="95" width="340" height="380" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_root_comp" value="&amp;lt;b&amp;gt;Root.tsx&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Kompozisyon çözünürlüğü (1080p Dikey/Yatay), FPS ve süre kaydı.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#8B5CF6;strokeColor=#6D28D9;fontColor=#FFFFFF;fontSize=11;shadow=1;" vertex="1" parent="c3_1">
+          <mxGeometry x="1215" y="150" width="290" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_quran_video_comp" value="&amp;lt;b&amp;gt;QuranVideo.tsx&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Senkronize kelime vurgulama, ayet geçiş animasyonları, çoklu font ve arka plan video render'ı.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#8B5CF6;strokeColor=#6D28D9;fontColor=#FFFFFF;fontSize=11;shadow=1;" vertex="1" parent="c3_1">
+          <mxGeometry x="1215" y="270" width="290" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_box_be_modules" value="Backend FastAPI Modülleri" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#15803D;strokeWidth=2;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#14532D;fontSize=13;spacingTop=10;" vertex="1" parent="c3_1">
+          <mxGeometry x="1190" y="500" width="340" height="425" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_s_extraction" value="&amp;lt;b&amp;gt;extraction.py Router&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Ses çıkarma, VAD kelime hizalama rotaları.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16A34A;strokeColor=#15803D;fontColor=#FFFFFF;fontSize=11;shadow=1;" vertex="1" parent="c3_1">
+          <mxGeometry x="1215" y="550" width="290" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_s_quran" value="&amp;lt;b&amp;gt;quran.py Router &amp;amp; Tanzil Service&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;Sure listesi, Uthmani ayet ve meal sorguları.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16A34A;strokeColor=#15803D;fontColor=#FFFFFF;fontSize=11;shadow=1;" vertex="1" parent="c3_1">
+          <mxGeometry x="1215" y="650" width="290" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_s_whisper_engine" value="&amp;lt;b&amp;gt;whisper_aligner.py (VAD)&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style='font-size: 10px;'&amp;gt;OdyAsh ASR modeli ile milisaniyelik hizalama motoru.&amp;lt;/font&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16A34A;strokeColor=#15803D;fontColor=#FFFFFF;fontSize=11;shadow=1;" vertex="1" parent="c3_1">
+          <mxGeometry x="1215" y="750" width="290" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_step_to_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_stepper" target="c3_step1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s1_asearch" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step1" target="c3_comp_asearch">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s1_tselect" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step1" target="c3_comp_tselect">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s1_msedit" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step1" target="c3_comp_mseditor">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s1_autoseg" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step1" target="c3_r_autoseg">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s2_trimmer" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step2" target="c3_comp_atrimmer">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s2_prepaudio" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step2" target="c3_r_prepaudio">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s2_fetchaudio" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step2" target="c3_r_fetchaudio">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s2_trimaudio" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step2" target="c3_r_trimaudio">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s4_fetchvideo" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step4" target="c3_r_fetchvideo">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s5_render" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step5" target="c3_r_render">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_s5_clean" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_step5" target="c3_r_cleanup">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_render_root" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_r_render" target="c3_root_comp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_root_qvid" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_root_comp" target="c3_quran_video_comp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_prep_extract" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_r_prepaudio" target="c3_s_extraction">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_ext_whisper" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_s_extraction" target="c3_s_whisper_engine">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_e_asearch_quran" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;endArrow=classic;endFill=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="c3_1" source="c3_comp_asearch" target="c3_s_quran">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="c4" name="C4 - Kod ve Render Akışı">
+    <mxGraphModel dx="1422" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1150" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="c4_0"/>
+        <mxCell id="c4_1" parent="c4_0"/>
+        <mxCell id="c4_title" value="&amp;lt;b style='font-size: 18px; color: #0F172A;'&amp;gt;Kur&amp;#x27;an Video Projesi — C4: Kod ve Render Akışı (Video Creation &amp;amp; Alignment Pipeline)&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;span style='font-size: 12px; color: #64748B;'&amp;gt;Kullanıcı ayarlarından Whisper VAD kelime çıkarımı, FFmpeg kesintisiz pre-loop ve Remotion 1080p video derlemesine tam sıra.&amp;lt;/span&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="c4_1">
+          <mxGeometry x="40" y="25" width="1300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4_head_user" value="👤 Kullanıcı&amp;lt;br&amp;gt;[Tarayıcı]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0284C7;strokeColor=#0F172A;fontColor=#FFFFFF;fontStyle=1;fontSize=11;shadow=1;" vertex="1" parent="c4_1">
+          <mxGeometry x="60" y="100" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4_line_user" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1.5;strokeColor=#94A3B8;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="155" as="sourcePoint"/>
+            <mxPoint x="120" y="1080" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_head_ui" value="UI Form&amp;lt;br&amp;gt;[VideoCreatorForm]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2563EB;strokeColor=#0F172A;fontColor=#FFFFFF;fontStyle=1;fontSize=11;shadow=1;" vertex="1" parent="c4_1">
+          <mxGeometry x="210" y="100" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4_line_ui" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1.5;strokeColor=#94A3B8;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="155" as="sourcePoint"/>
+            <mxPoint x="270" y="1080" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_head_trimmer" value="AudioTrimmer&amp;lt;br&amp;gt;[WaveSurfer]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3B82F6;strokeColor=#0F172A;fontColor=#FFFFFF;fontStyle=1;fontSize=11;shadow=1;" vertex="1" parent="c4_1">
+          <mxGeometry x="370" y="100" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4_line_trimmer" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1.5;strokeColor=#94A3B8;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="155" as="sourcePoint"/>
+            <mxPoint x="430" y="1080" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_head_prep" value="/api/video&amp;lt;br&amp;gt;[prepare-audio]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D97706;strokeColor=#0F172A;fontColor=#FFFFFF;fontStyle=1;fontSize=11;shadow=1;" vertex="1" parent="c4_1">
+          <mxGeometry x="530" y="100" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4_line_prep" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1.5;strokeColor=#94A3B8;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590" y="155" as="sourcePoint"/>
+            <mxPoint x="590" y="1080" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_head_be" value="FastAPI&amp;lt;br&amp;gt;[custom extraction]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16A34A;strokeColor=#0F172A;fontColor=#FFFFFF;fontStyle=1;fontSize=11;shadow=1;" vertex="1" parent="c4_1">
+          <mxGeometry x="690" y="100" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4_line_be" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1.5;strokeColor=#94A3B8;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="750" y="155" as="sourcePoint"/>
+            <mxPoint x="750" y="1080" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_head_whisper" value="Whisper VAD&amp;lt;br&amp;gt;[extract_precise]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#22C55E;strokeColor=#0F172A;fontColor=#FFFFFF;fontStyle=1;fontSize=11;shadow=1;" vertex="1" parent="c4_1">
+          <mxGeometry x="850" y="100" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4_line_whisper" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1.5;strokeColor=#94A3B8;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="910" y="155" as="sourcePoint"/>
+            <mxPoint x="910" y="1080" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_head_render_route" value="/api/video&amp;lt;br&amp;gt;[render]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E11D48;strokeColor=#0F172A;fontColor=#FFFFFF;fontStyle=1;fontSize=11;shadow=1;" vertex="1" parent="c4_1">
+          <mxGeometry x="1010" y="100" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4_line_render_route" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1.5;strokeColor=#94A3B8;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1070" y="155" as="sourcePoint"/>
+            <mxPoint x="1070" y="1080" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_head_ffmpeg" value="FFmpeg&amp;lt;br&amp;gt;[Stream Looper]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#475569;strokeColor=#0F172A;fontColor=#FFFFFF;fontStyle=1;fontSize=11;shadow=1;" vertex="1" parent="c4_1">
+          <mxGeometry x="1170" y="100" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4_line_ffmpeg" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1.5;strokeColor=#94A3B8;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1230" y="155" as="sourcePoint"/>
+            <mxPoint x="1230" y="1080" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_head_remotion" value="Remotion Engine&amp;lt;br&amp;gt;[renderMedia]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7C3AED;strokeColor=#0F172A;fontColor=#FFFFFF;fontStyle=1;fontSize=11;shadow=1;" vertex="1" parent="c4_1">
+          <mxGeometry x="1330" y="100" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4_line_remotion" value="" style="endArrow=none;dashed=1;html=1;strokeWidth=1.5;strokeColor=#94A3B8;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1390" y="155" as="sourcePoint"/>
+            <mxPoint x="1390" y="1080" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_0" value="1. Sure, Ayet, Font ve YouTube Linki girer" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="180" as="sourcePoint"/>
+            <mxPoint x="270" y="180" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_1" value="2. Harici ses indirilir (yt-dlp)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#2563EB;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;labelBackgroundColor=#FFFFFF;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="230" as="sourcePoint"/>
+            <mxPoint x="270" y="260" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="310" y="230"/>
+              <mxPoint x="310" y="260"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_2" value="3. Fare ile ön kesim aralığı belirlenir (pre-trim)" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="280" as="sourcePoint"/>
+            <mxPoint x="430" y="280" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_3" value="4. &quot;Sesi Düzenle &amp; Hazırla&quot; butonuna basar" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="330" as="sourcePoint"/>
+            <mxPoint x="270" y="330" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_4" value="5. FormData (surah, range, trimStart, trimEnd)" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="380" as="sourcePoint"/>
+            <mxPoint x="590" y="380" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_5" value="6. POST /api/extraction/custom (ses &amp; ayet aralığı)" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590" y="430" as="sourcePoint"/>
+            <mxPoint x="750" y="430" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_6" value="7. Sesi kırp &amp; Whisper ile kelime zamanlamasını çıkar" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="750" y="480" as="sourcePoint"/>
+            <mxPoint x="910" y="480" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_7" value="8. wordTimingsData (kelime ms başlangıç/bitiş)" style="html=1;endArrow=classic;dashed=1;strokeColor=#059669;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="910" y="530" as="sourcePoint"/>
+            <mxPoint x="750" y="530" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_8" value="9. { mp3_filename, json_filename }" style="html=1;endArrow=classic;dashed=1;strokeColor=#059669;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="750" y="580" as="sourcePoint"/>
+            <mxPoint x="590" y="580" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_9" value="10. { audioUrl, wordTimingsData }" style="html=1;endArrow=classic;dashed=1;strokeColor=#059669;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590" y="630" as="sourcePoint"/>
+            <mxPoint x="270" y="630" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_10" value="11. İkinci Trimmer tam kırpma boyutuyla açılır" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="680" as="sourcePoint"/>
+            <mxPoint x="430" y="680" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_11" value="12. &quot;Videoyu Oluştur&quot; butonuna basar" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="730" as="sourcePoint"/>
+            <mxPoint x="270" y="730" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_12" value="13. POST /api/video/render (Tüm ayarlar, fontlar, medya)" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="780" as="sourcePoint"/>
+            <mxPoint x="1070" y="780" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_13" value="14. -stream_loop ile video tilavet süresine kesintisiz pre-loop edilir" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1070" y="830" as="sourcePoint"/>
+            <mxPoint x="1230" y="830" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_14" value="15. looped_background.mp4 (Kesintisiz tek video)" style="html=1;endArrow=classic;dashed=1;strokeColor=#059669;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1230" y="880" as="sourcePoint"/>
+            <mxPoint x="1070" y="880" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_15" value="16. Otantik Tanzil veya PUA mushaf glifleri seçilir" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#2563EB;strokeWidth=1.5;fontSize=10;fontColor=#1E293B;labelBackgroundColor=#FFFFFF;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1070" y="930" as="sourcePoint"/>
+            <mxPoint x="1070" y="960" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="1110" y="930"/>
+              <mxPoint x="1110" y="960"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_16" value="17. renderMedia (Tek parça video + Kelime senkronu)" style="html=1;endArrow=classic;strokeColor=#1E293B;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1070" y="980" as="sourcePoint"/>
+            <mxPoint x="1390" y="980" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_17" value="18. Final MP4 Video üretildi (renders/...)" style="html=1;endArrow=classic;dashed=1;strokeColor=#059669;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1390" y="1030" as="sourcePoint"/>
+            <mxPoint x="1070" y="1030" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c4_msg_18" value="19. Videoyu oynat ve indir seçeneği sunulur" style="html=1;endArrow=classic;dashed=1;strokeColor=#059669;strokeWidth=1.5;fontSize=10;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;labelBorderColor=none;" edge="1" parent="c4_1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1070" y="1080" as="sourcePoint"/>
+            <mxPoint x="120" y="1080" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
