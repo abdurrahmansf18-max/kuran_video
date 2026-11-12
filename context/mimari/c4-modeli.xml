@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Kur'an Video Projesi — C4 Mimari Modeli (C4 Software Architecture Model)
+  Standard: C4 Model (Context, Container, Component, Code)
+  Format: XML (Extensible Markup Language)
+  Maintainer: KuranNuru Development Team
+  Rules: Tüm yeni özellik ve kod eklemelerinde bu XML dosyası güncellenmelidir.
+-->
+<c4-architecture project="kuran-video" name="KuranNuru Video Creator" version="1.0" format="XML">
+
+  <metadata>
+    <title>Kur'an Video Projesi — C4 Mimari Modeli</title>
+    <description>KuranNuru Video Creator sisteminin C1, C2, C3 ve C4 seviyelerinde yazılım mimari tanımı, bileşen ilişkileri ve yönetişim kuralları.</description>
+    <last-updated>2026-11-12</last-updated>
+    <language>tr</language>
+    <status>Active</status>
+  </metadata>
+
+  <!-- ==================================================================== -->
+  <!-- C1: SİSTEM BAĞLAMI (SYSTEM CONTEXT)                                  -->
+  <!-- ==================================================================== -->
+  <c1-system-context>
+    <summary>Sistemin dış dünyadaki kullanıcılar ve harici servis sağlayıcılarla üst düzey ilişkilerini tanımlar.</summary>
+
+    <actors>
+      <actor id="user" type="Person" role="İçerik Üreticisi / Kullanıcı">
+        <description>Web tarayıcısı üzerinden sure ve ayet seçen, tilavet, arka plan videosu, hat fontları ve ses seviyesi belirleyerek yüksek çözünürlüklü Kur'an videosu üreten kullanıcı.</description>
+      </actor>
+    </actors>
+
+    <systems>
+      <system id="kuran-video-platform" type="Software System" status="Internal">
+        <name>KuranNuru Video Creator Platformu</name>
+        <description>Next.js 14, Remotion 4 ve FastAPI tabanlı uçtan uca otomatik ve hassas Kur'an video üretim sistemi.</description>
+      </system>
+
+      <external-systems>
+        <external-system id="youtube" provider="Google / YouTube">
+          <purpose>yt-dlp aracılığıyla harici tilavet sesi ve arka plan videosu (yağmur, doğa, Kabe manzarası vb.) temini.</purpose>
+          <protocol>HTTPS</protocol>
+        </external-system>
+
+        <external-system id="tanzil-quran-cloud" provider="Tanzil.net &amp; Al-Quran Cloud API">
+          <purpose>Otantik Uthmani mushaf metni, ayet numaralandırmaları ve sure meta verisi doğrulaması.</purpose>
+          <protocol>HTTPS / JSON</protocol>
+        </external-system>
+
+        <external-system id="quran-com-api" provider="Quran.com API v4">
+          <purpose>Kelime bazlı Kuran araması, sayfa glifleri ve tecvid durak işaretleri temini.</purpose>
+          <protocol>HTTPS / REST</protocol>
+        </external-system>
+
+        <external-system id="mp3quran" provider="Mp3Quran.net &amp; EveryAyah.com">
+          <purpose>Farklı kârilerin (Mishary, Maher, Ajmi, Dosari vb.) standart ayet MP3 tilavet dosyaları.</purpose>
+          <protocol>HTTPS / CDN</protocol>
+        </external-system>
+
+        <external-system id="pollinations-ai" provider="Pollinations AI">
+          <purpose>Çok uzun ayetlerin ekran estetiğine ve tilavet nefes duraklarına göre mantıksal parçalara bölünmesi.</purpose>
+          <protocol>HTTPS / REST</protocol>
+        </external-system>
+      </external-systems>
+    </systems>
+
+    <relationships>
+      <relationship from="user" to="kuran-video-platform" description="Sure/ayet seçer, font/boyut ayarlar, medya linki ekler, video üretir" protocol="HTTPS" />
+      <relationship from="kuran-video-platform" to="youtube" description="Harici video ve ses klibi çeker" protocol="yt-dlp / HTTPS" />
+      <relationship from="kuran-video-platform" to="tanzil-quran-cloud" description="Uthmani mushaf metnini doğrular" protocol="REST / HTTPS" />
+      <relationship from="kuran-video-platform" to="quran-com-api" description="Canlı ayet arama sorgularını çeker" protocol="REST / HTTPS" />
+      <relationship from="kuran-video-platform" to="mp3quran" description="Kari tilavet seslerini indirir" protocol="HTTP/HTTPS" />
+      <relationship from="kuran-video-platform" to="pollinations-ai" description="Uzun ayet bölümleme önerileri alır" protocol="REST / HTTPS" />
+      <relationship from="kuran-video-platform" to="user" description="MP4 formatında yüksek kaliteli video çıktısı sunar" protocol="HTTP/HTTPS" />
+    </relationships>
+
+    <diagram type="mermaid"><![CDATA[
+graph TD
+    User["👤 Kullanıcı / İçerik Üreticisi\n(Web Tarayıcısı)"]
+
+    subgraph Platform["KuranNuru Video Creator Platformu"]
+        KuranVideo["🕋 Kur'an Video Üretim Sistemi\n(Next.js + Remotion + FastAPI)"]
+    end
+
+    subgraph ExternalServices["Harici Servisler ve Veri Sağlayıcılar"]
+        YouTube["📺 YouTube / Harici Linkler\n(yt-dlp ile Ses/Video Kaynağı)"]
+        QuranCloud["📖 Tanzil & Al-Quran Cloud API\n(Uthmani Mushaf & Sure Bilgisi)"]
+        QuranCom["🔍 Quran.com API v4\n(Ayet Arama & Kelime Kodu v2)"]
+        Mp3Quran["🎙️ Mp3Quran & EveryAyah\n(Kari Tilavet MP3 Kaynakları)"]
+        Pollinations["🤖 Pollinations AI\n(Otomatik Ayet Bölümleme Asistanı)"]
+    end
+
+    User -->|"Sure/Ayet seçer, font/boyut ayarlar, link verir, video üretir"| KuranVideo
+    KuranVideo -->|"Harici ses ve arka plan videosu çeker"| YouTube
+    KuranVideo -->|"Otantik Uthmani metin doğrulaması"| QuranCloud
+    KuranVideo -->|"Ayet arama ve tecvid durakları"| QuranCom
+    KuranVideo -->|"Kari seslerini indirir"| Mp3Quran
+    KuranVideo -->|"Uzun ayetleri mantıksal bölümler"| Pollinations
+    KuranVideo -->|"MP4 Video Çıktısı sunar"| User
+]]></diagram>
+  </c1-system-context>
+
+  <!-- ==================================================================== -->
+  <!-- C2: KONTEYNER MİMARİSİ (CONTAINER DIAGRAM)                           -->
+  <!-- ==================================================================== -->
+  <c2-containers>
+    <summary>Sistemi oluşturan bağımsız çalışma birimlerini (Docker konteynerleri, servisler, portlar ve depolar) tanımlar.</summary>
+
+    <environment type="Docker Compose" project-name="kuran_video">
+      <container id="frontend" name="Frontend Servisi" port-host="3001" port-container="3000">
+        <technology>Next.js 14 (App Router), React 18, Tailwind CSS v3, TypeScript, Remotion 4, WaveSurfer.js</technology>
+        <responsibilities>Kullanıcı arayüzü, 5 adımlı modüler form akışı, interaktif dalga formu ses kesici, Remotion Chromium video render motoru.</responsibilities>
+        <volumes>
+          <volume mount="/app">./frontend</volume>
+          <volume mount="/app/node_modules">anonymous volume</volume>
+          <volume mount="/app/.next">anonymous volume</volume>
+          <volume mount="/app/public/render-assets">render_assets (named volume)</volume>
+          <volume mount="/app/public/renders">tmpfs 512M</volume>
+        </volumes>
+      </container>
+
+      <container id="backend" name="Backend Servisi" port-host="8002" port-container="8000">
+        <technology>FastAPI 0.104+, Python 3.10, Uvicorn, faster-whisper, stable-ts, yt-dlp, FFmpeg, PyTorch GPU</technology>
+        <responsibilities>Ses çıkarma, Whisper VAD tecvid korumalı kelime zamanlaması, YouTube medya indirme, sure/ayet veritabanı API'leri.</responsibilities>
+        <resources gpu="true" driver="nvidia" count="1" />
+      </container>
+
+      <container id="db" name="Veritabanı Servisi" port-host="5434" port-container="5432">
+        <technology>PostgreSQL 15 Alpine</technology>
+        <responsibilities>Sureler, ayetler, mealler ve tecvid verilerinin ilişkisel kalıcı depolanması.</responsibilities>
+        <volumes>
+          <volume mount="/var/lib/postgresql/data">postgres_data (named volume)</volume>
+        </volumes>
+      </container>
+
+      <container id="redis" name="Önbellek Servisi" port-host="6381" port-container="6379">
+        <technology>Redis 7 Alpine</technology>
+        <responsibilities>Geçici işlem kuyrukları, istek hız sınırlandırması ve ses önbellekleme.</responsibilities>
+      </container>
+    </environment>
+
+    <relationships>
+      <relationship from="user" to="frontend" description="HTTP/HTTPS erişimi" port="3001" />
+      <relationship from="frontend" to="backend" description="Dahili Docker ağı üzerinden REST çağrıları" port="8000" endpoint="http://backend:8000" />
+      <relationship from="frontend" to="frontend-renders" description="Remotion Chromium render çıktısı" protocol="IPC / Headless Browser" />
+      <relationship from="backend" to="db" description="SQLAlchemy ORM sorguları" port="5432" />
+      <relationship from="backend" to="redis" description="Önbellek ve kuyruk iletişimi" port="6379" />
+    </relationships>
+
+    <diagram type="mermaid"><![CDATA[
+graph TB
+    User["👤 Kullanıcı Tarayıcısı\n(Chrome, Safari, Firefox)"]
+
+    subgraph DockerHost["Docker Compose Ortamı (kuran_video)"]
+        subgraph FrontendContainer["Frontend Servisi (Port 3001 -> 3000)"]
+            NextApp["Next.js 14 App Router\n(React 18, Tailwind CSS, TypeScript)"]
+            RemotionEngine["Remotion 4 Render Engine\n(Headless Chromium, Puppeteer)"]
+            WaveSurfer["WaveSurfer.js\n(İnteraktif Dalga Formu Kesici)"]
+            LocalAudioCache["Local Public Storage\n(/public/renders, /public/render-assets)"]
+        end
+
+        subgraph BackendContainer["Backend Servisi (Port 8002 -> 8000)"]
+            FastAPI["FastAPI 0.104+ Web API\n(Python 3.10, Uvicorn)"]
+            WhisperModel["faster-whisper & stable-ts\n(OdyAsh/faster-whisper-base-ar-quran, VAD)"]
+            YtDlp["yt-dlp & FFmpeg\n(Medya İndirme & Kod Dönüştürme)"]
+            BackendStorage["Disk Deposu\n(/app/data/extracted_clips, /app/data/surah_cache)"]
+        end
+
+        subgraph DBContainer["Veritabanı Servisi (Port 5434 -> 5432)"]
+            PostgreSQL[("PostgreSQL 15 Relational DB\n(surahs, ayahs tabloları)")]
+        end
+
+        subgraph RedisContainer["Önbellek Servisi (Port 6381 -> 6379)"]
+            Redis[("Redis 7 In-Memory Cache\n(Oturum ve işlem kuyrukları)")]
+        end
+    end
+
+    User -->|"HTTP / HTTPS (Port 3001)"| NextApp
+    NextApp -->|"İç Docker Ağı (http://backend:8000)"| FastAPI
+    NextApp -->|"Dahili Render"| RemotionEngine
+    NextApp -->|"Ses Manipülasyonu"| WaveSurfer
+    NextApp -->|"Statik Dosya Okuma/Yazma"| LocalAudioCache
+
+    FastAPI -->|"SQLAlchemy ORM (Port 5432)"| PostgreSQL
+    FastAPI -->|"Önbellek & Kuyruk (Port 6379)"| Redis
+    FastAPI -->|"Model Çıkarımı (Kelime Hizalama)"| WhisperModel
+    FastAPI -->|"Medya İndirme & Sıkıştırma"| YtDlp
+    FastAPI -->|"Geçici Ses/JSON Depolama"| BackendStorage
+
+    RemotionEngine -->|"Video İndirme API"| User
+]]></diagram>
+  </c2-containers>
+
+  <!-- ==================================================================== -->
+  <!-- C3: BİLEŞEN SEVİYESİ (COMPONENT DIAGRAM)                             -->
+  <!-- ==================================================================== -->
+  <c3-components>
+    <summary>Frontend ve Backend uygulamalarını oluşturan iç bileşenleri ve katman mimarisini tanımlar.</summary>
+
+    <frontend-architecture module="kuran-video/frontend">
+      <stepper id="workflow-stepper" z-index="50">
+        <description>Üst bantta yer alan, 5 adımı anlık durum rozetleriyle özetleyen ve tıklandığında ilgili karta kaydıran yapışkan (sticky) navigasyon.</description>
+      </stepper>
+
+      <standard-cards>
+        <card id="step-1" number="1" name="Sure ve Ayet Seçimi" z-index="30" focus-z-index="45">
+          <elements>
+            <element name="AyahSearch" z-index="30">Canlı Kuran ayet arama çubuğu ve açılır sonuç listesi.</element>
+            <element name="DropdownSelect (Sure)" z-index="20">114 sure arasından arama ve seçim.</element>
+            <element name="TranslationSelector" z-index="20">Meal kaynağı seçimi (Diyanet, Elmalılı vb.).</element>
+            <element name="VerseRangeInput">İlk ayet ve aralık yönetimi.</element>
+            <element name="VersesBadges" z-index="10">Seçili ayet rozetleri ve ayet ekleme/çıkarma butonları.</element>
+            <element name="SegmentationPanel">Yapay zeka veya manuel uzun ayet bölümleme tetikleyicisi.</element>
+          </elements>
+        </card>
+
+        <card id="step-2" number="2" name="Tilavet ve Ses Yönetimi" z-index="25" focus-z-index="45">
+          <elements>
+            <element name="AudioSourceTabs" z-index="20">Hazır kari listesi veya YouTube/harici link modu seçimi.</element>
+            <element name="ReciterDropdown" z-index="20">Genişletilmiş kâri listesi veya manuel okuyucu ismi girişi.</element>
+            <element name="LinkAudioTrimmerTrigger">Fareyle görsel ses aralığı kesimi modalı (AudioTrimmer).</element>
+            <element name="AudioPreparationCallout" z-index="10">Whisper VAD kelime zamanlama çıkarımı ve ince ayar paneli.</element>
+            <element name="InlineAudioPreview">Hazırlanan tilavetin anında dinlenebildiği HTML5 ses oynatıcı.</element>
+          </elements>
+        </card>
+
+        <card id="step-3" number="3" name="Tipografi ve Hat Düzeni" z-index="20" focus-z-index="45">
+          <elements>
+            <element name="ArabicFontCard" z-index="20">KFGQPC Naskh, Osmani Hafs, Amiri, Scheherazade, PUA font seçimi, boyut slider'ı ve canlı Arapça önizleme.</element>
+            <element name="TranslationFontCard" z-index="20">System, Jakarta, Inter, Montserrat, Playfair, Cinzel, Sansita font seçimi, boyut slider'ı ve canlı Türkçe meal önizleme.</element>
+          </elements>
+        </card>
+
+        <card id="step-4" number="4" name="Arka Plan Medyası ve Atmosfer" z-index="15" focus-z-index="45">
+          <elements>
+            <element name="BgSourceTabs">Video yükleme veya YouTube linki ile getirme sekmeleri.</element>
+            <element name="BgMediaPreview">Önizleme oynatıcısı, otomatik döngü rozeti, süre ve medyayı kaldırma.</element>
+            <element name="AmbientVolumeController">Yağmur/doğa sesini koruma checkbox'ı, hassas ses slider'ı (%0 - %100) ve hızlı seviye butonları (%0, %15, %30, %50, %100).</element>
+          </elements>
+        </card>
+
+        <card id="step-5" number="5" name="Video Üretimi ve İndirme" z-index="10" focus-z-index="45">
+          <elements>
+            <element name="ConfigurationSummary">Sure, kari, tipografi ve arka plan durumunu özetleyen mini gösterge paneli.</element>
+            <element name="GenerateButton">HD Render başlatma ve animasyonlu durum CTA butonu.</element>
+            <element name="ErrorAlert">Render esnasında oluşabilecek hataların kullanıcıya bildirilmesi.</element>
+            <element name="VideoPlayerAndDownload">Üretilen videoyu tarayıcıda oynatma ve MP4 olarak indirme kartı.</element>
+          </elements>
+        </card>
+      </standard-cards>
+
+      <sub-components>
+        <component name="AudioTrimmer.tsx">WaveSurfer.js tabanlı, mouse ile sürüklenebilir interaktif dalga formu kesici.</component>
+        <component name="ManualSegmentationEditor.tsx">Kelime taşıma, birleştirme ve tecvid duraklarına göre görsel ayet bölümleyici.</component>
+        <component name="DropdownSelect.tsx">Arka plana taşmayı önleyen, z-50 ve shadow-2xl katmanlı genel arama/seçim kutusu.</component>
+      </sub-components>
+
+      <next-api-routes path="/src/app/api">
+        <route path="/api/video/render" method="POST">FFmpeg pre-loop, Tanzil/PUA metin seçimi ve Remotion derlemesi.</route>
+        <route path="/api/video/prepare-audio" method="POST">Tilavet sesinin hazırlanması ve Whisper kelime zamanlamasının temini.</route>
+        <route path="/api/video/trim-audio" method="POST">Kullanıcının belirlediği aralığın milisaniyelik kesilmesi.</route>
+        <route path="/api/video/fetch-video" method="POST">YouTube üzerinden sessiz/sesli video indirme.</route>
+        <route path="/api/video/fetch-audio" method="POST">YouTube üzerinden tilavet sesi indirme.</route>
+        <route path="/api/segmentation/auto" method="POST">AI destekli uzun ayet parçalama.</route>
+        <route path="/api/video/cleanup" method="DELETE/POST">Geçici render dosyalarını temizleme.</route>
+      </next-api-routes>
+
+      <remotion-composition path="/src/remotion">
+        <file name="Root.tsx">Kompozisyon çözünürlüğü (1080x1920 dikey veya 1920x1080 yatay), FPS ve süre kaydı.</file>
+        <file name="QuranVideo.tsx">Senkronize kelime vurgulama, ayet geçiş animasyonları, çoklu font ve arka plan video render'ı.</file>
+      </remotion-composition>
+    </frontend-architecture>
+
+    <backend-architecture module="kuran-video/backend">
+      <routers path="/app/routers">
+        <router name="extraction.py">Ses çıkarma, VAD kelime hizalama ve harici klip işleme rotaları.</router>
+        <router name="surahs.py">Sure listesi, ayet sayıları ve sure detayları.</router>
+        <router name="ayahs.py">Arapça ve Türkçe ayet metinleri sorguları.</router>
+        <router name="search.py">Kuran metni içi hızlı arama rotası.</router>
+        <router name="download.py">İşlenen ses ve video kliplerinin indirilmesi.</router>
+        <router name="ai.py">Yapay zeka destekli bölümleme rotası.</router>
+      </routers>
+
+      <core-engines>
+        <engine name="extract_precise_clip.py">faster-whisper ve stable-ts ile tecvid uzatmalarını (Madd) koruyan hassas kelime zamanlaması.</engine>
+        <engine name="WhisperModel">OdyAsh/faster-whisper-base-ar-quran Kur'an odaklı özel ASR modeli.</engine>
+        <engine name="Database &amp; Models">SQLAlchemy ile PostgreSQL veri modelleri.</engine>
+      </core-engines>
+    </backend-architecture>
+
+    <diagram type="mermaid"><![CDATA[
+graph LR
+    subgraph FrontendArchitecture["Frontend Arayüz Mimarisi (VideoCreatorForm)"]
+        Stepper["Workflow Stepper Bar\n(Canlı Durum Rozetleri & Hızlı Atlama)"]
+        Step1["Adım 1: Sure & Ayet\n(Canlı Arama, Sure, Aralık, Meal, Ayet Çipleri)"]
+        Step2["Adım 2: Tilavet & Ses\n(Kari / Link Sesi, Trimmer, Whisper VAD Hazırlığı)"]
+        Step3["Adım 3: Tipografi & Hat\n(Arapça & Meal Fontları, Boyut Slider, Canlı Önizleme)"]
+        Step4["Adım 4: Arka Plan\n(Video / Görsel, Otomatik Döngü, Ortam Sesi Kontrolü)"]
+        Step5["Adım 5: Video Üretimi\n(Yapılandırma Özeti, HD Render, Oynatıcı & İndirme)"]
+    end
+
+    subgraph UIComponents["Yardımcı Modüler Bileşenler"]
+        ATrimmer["AudioTrimmer.tsx\n(Mouse ile Dalga Formu Kesici)"]
+        MSEditor["ManualSegmentationEditor.tsx\n(Kelime Taşıma ve Parçalama)"]
+        ASearch["AyahSearch.tsx\n(Canlı Ayet Arama)"]
+        TSelector["TranslationSelector.tsx\n(Meal Seçimi)"]
+    end
+
+    subgraph NextRoutes["Next.js API Rotaları (/api)"]
+        R_Render["video/render/route.ts\n(Remotion Paketleme & Çıktı Üretimi)"]
+        R_PrepAudio["video/prepare-audio/route.ts\n(Ses Hazırlama & Kelime Hizalama)"]
+        R_TrimAudio["video/trim-audio/route.ts\n(FFmpeg ile Ses Kırpma)"]
+        R_FetchVideo["video/fetch-video/route.ts\n(YouTube Video İndirme)"]
+        R_FetchAudio["video/fetch-audio/route.ts\n(YouTube Ses İndirme)"]
+        R_AutoSeg["segmentation/auto/route.ts\n(Yapay Zeka Ayet Bölümleme)"]
+        R_Cleanup["video/cleanup/route.ts\n(Geçici Dosya Temizliği)"]
+    end
+
+    subgraph RemotionComp["Remotion Video Kompozisyonu"]
+        QVideo["QuranVideo.tsx\n(Ayarlanabilir Tipografi, Hat, Animasyon)"]
+        RootComp["Root.tsx\n(Kompozisyon Kaydı)"]
+    end
+
+    Stepper --> Step1
+    Stepper --> Step2
+    Stepper --> Step3
+    Stepper --> Step4
+    Stepper --> Step5
+
+    Step1 --> ASearch
+    Step1 --> TSelector
+    Step1 --> MSEditor
+    Step1 --> R_AutoSeg
+
+    Step2 --> ATrimmer
+    Step2 --> R_FetchAudio
+    Step2 --> R_PrepAudio
+    Step2 --> R_TrimAudio
+
+    Step4 --> R_FetchVideo
+
+    Step5 --> R_Render
+    Step5 --> R_Cleanup
+    R_Render --> RootComp
+    RootComp --> QVideo
+]]></diagram>
+  </c3-components>
+
+  <!-- ==================================================================== -->
+  <!-- C4: KOD VE ÇALIŞMA AKIŞI (CODE / PIPELINE FLOW)                      -->
+  <!-- ==================================================================== -->
+  <c4-code-and-pipelines>
+    <summary>Kur'an Video Üretim Hattının (Video Creation &amp; Alignment Pipeline) uçtan uca yürütme sıralaması.</summary>
+
+    <pipeline id="quran-video-pipeline" name="Kur'an Video Üretim Hattı">
+      <step sequence="1" actor="User" target="UI">Sure, Ayet, Font ve YouTube linki/kari seçimi yapılır.</step>
+      <step sequence="2" actor="UI" target="UI">Harici ses girildiyse yt-dlp ile indirilir ve ilk ön kesim (pre-trim) belirlenir.</step>
+      <step sequence="3" actor="User" target="UI">"Sesi Hazırla ve Düzenle" butonuna tıklanır.</step>
+      <step sequence="4" actor="UI" target="NextPrepRoute">FormData (sure, ayet aralığı, trimStart, trimEnd) gönderilir.</step>
+      <step sequence="5" actor="NextPrepRoute" target="FastAPI">POST /api/extraction/custom çağrılır.</step>
+      <step sequence="6" actor="FastAPI" target="WhisperEngine">Ses kırpılır ve Whisper VAD ile kelime zamanlamaları (wordTimingsData) çıkarılır.</step>
+      <step sequence="7" actor="FastAPI" target="NextPrepRoute">Ses dosya yolu ve zamanlama JSON'u döndürülür.</step>
+      <step sequence="8" actor="UI" target="AudioTrimmer">Kullanıcı dilerse dalga formu üzerinde milisaniyelik ince ayar yapar.</step>
+      <step sequence="9" actor="User" target="UI">"Videoyu Oluştur" butonuna basar.</step>
+      <step sequence="10" actor="UI" target="NextRenderRoute">POST /api/video/render (Tüm ayarlar, fontlar, arka plan ve ses seviyesi).</step>
+      <step sequence="11" actor="NextRenderRoute" target="FFmpeg">Arka plan videosu -stream_loop ile kesintisiz tam tilavet süresine pre-loop edilir; ses tercihi (-an veya ses düzeyi) uygulanır.</step>
+      <step sequence="12" actor="NextRenderRoute" target="Remotion">renderMedia komutuyla Chromium headless üzerinden 1080p MP4 render edilir.</step>
+      <step sequence="13" actor="NextRenderRoute" target="UI">Üretilen MP4 video bağlantısı kullanıcıya sunulur.</step>
+    </pipeline>
+
+    <diagram type="mermaid"><![CDATA[
+sequenceDiagram
+    autonumber
+    actor User as Kullanıcı
+    participant UI as VideoCreatorForm.tsx
+    participant Trimmer as AudioTrimmer.tsx
+    participant PrepRoute as /api/video/prepare-audio
+    participant Backend as FastAPI (/api/extraction/custom)
+    participant Whisper as extract_precise_clip (Whisper VAD)
+    participant RenderRoute as /api/video/render
+    participant FFmpeg as FFmpeg Stream Looper
+    participant Remotion as Remotion (renderMedia)
+
+    User->>UI: Sure, Ayet, Font ve YouTube Linki girer
+    UI->>UI: Harici ses indirilir (yt-dlp)
+    UI->>Trimmer: Fare ile ön kesim aralığı seçilir (pre-trim)
+    User->>UI: "Sesi Düzenle & Hazırla" butonuna basar
+    UI->>PrepRoute: FormData (surah, start, end, trimStart, trimEnd)
+    PrepRoute->>Backend: POST /api/extraction/custom
+    Backend->>Whisper: Sesi kırp & Whisper ile kelime zamanlamasını çıkar
+    Whisper-->>Backend: wordTimingsData (kelime ms başlangıç/bitiş)
+    Backend-->>PrepRoute: { mp3_filename, json_filename }
+    PrepRoute-->>UI: { audioUrl, wordTimingsData }
+    UI->>UI: İkinci Trimmer tam kırpma boyutuyla (0-duration) açılır
+    User->>UI: "Videoyu Oluştur" butonuna basar
+    UI->>RenderRoute: POST /api/video/render (Tüm ayarlar, fontlar, medya)
+    alt Arka Plan Videosu Mevcutsa
+        RenderRoute->>FFmpeg: -stream_loop ile video tilavet süresine pre-loop edilir (-an veya aac)
+        FFmpeg-->>RenderRoute: looped_background.mp4 (Kesintisiz tek akış)
+    end
+    alt Standart Font Seçildiyse (kfgqpc, amiri vb.)
+        RenderRoute->>RenderRoute: Otantik Tanzil Uthmani metni beslenir
+    else Mushaf PUA Seçildiyse
+        RenderRoute->>RenderRoute: Kral Fehd PUA sayfa glifleri beslenir
+    end
+    RenderRoute->>Remotion: renderMedia (Tek parça video + Kelime senkronu)
+    Remotion-->>RenderRoute: Final MP4 Video üretildi
+    RenderRoute-->>UI: { success: true, videoUrl }
+    UI-->>User: Videoyu oynat ve indir seçeneği sunulur
+]]></diagram>
+  </c4-code-and-pipelines>
+
+  <!-- ==================================================================== -->
+  <!-- YÖNETİŞİM VE SENKRONİZASYON PROTOKOLÜ (GOVERNANCE PROTOCOL)         -->
+  <!-- ==================================================================== -->
+  <governance-protocol>
+    <rules>
+      <rule id="c4-xml-sync-mandatory" priority="CRITICAL">
+        <description>Yeni bir özellik, servis, bileşen veya iş akışı eklendiğinde bu C4 XML dosyası (context/mimari/c4-modeli.xml) mutlaka ilgili C1, C2, C3 veya C4 etiketi altında güncellenmelidir. C4 modeli artık Markdown (.md) olarak değil, daima XML (.xml) formatında tutulmalıdır.</description>
+      </rule>
+      <rule id="code-architecture-conformity" priority="HIGH">
+        <description>Eklenen her yeni kod parçası projenin yerleşik yazılım mimarisine (Frontend 5 adımlı kart mimarisi, Backend FastAPI modüler router/service yapısı, Docker Compose konteyner izolasyonu) tam uyumlu olmalıdır.</description>
+      </rule>
+      <rule id="git-branch-strategy" priority="HIGH">
+        <description>Görev türüne göre ayrılmış GitHub branch düzeni korunmalıdır:
+          - features-and-updates: Yeni özellikler, geliştirmeler ve tasarım güncellemeleri.
+          - bug-fixes: Hata ve arıza düzeltmeleri.
+          - development: Entegrasyon ve ortak test dalı.
+          - main: Kararlı ve doğrulanmış nihai ana sürüm dalı.
+        </description>
+      </rule>
+    </rules>
+  </governance-protocol>
+
+</c4-architecture>

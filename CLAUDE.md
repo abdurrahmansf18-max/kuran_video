@@ -32,7 +32,7 @@ Bu dosya projenin ana ve kalıcı çalışma talimatlarını içerir. Claude Cod
 ## Proje hafızasını güncel tutma
 
 - Bir görev sırasında hedef, karar, kural, kapsam, sınır veya başka bir kalıcı proje bilgisi açıkça değişirse ilgili bağlam dosyasını aynı görev içinde güncelle.
-- Yeni bir özellik, bileşen, servis veya iş akışı eklendiğinde veya değiştirildiğinde `context/mimari/c4-modeli.md` dosyasındaki C4 modeli (C1 Sistem Bağlamı, C2 Konteyner, C3 Bileşen veya C4 Kod seviyesi) mutlaka aynı görev içinde güncellenmeli ve diyagramlara işlenmelidir.
+- Yeni bir özellik, bileşen, servis veya iş akışı eklendiğinde veya değiştirildiğinde `context/mimari/c4-modeli.xml` dosyasındaki C4 modeli (C1 Sistem Bağlamı, C2 Konteyner, C3 Bileşen veya C4 Kod seviyesi) mutlaka aynı görev içinde XML formatında güncellenmeli ve şemaya işlenmelidir. C4 modeli Markdown (.md) olarak değil, daima XML (.xml) dilinde tutulmalı ve yönetilmelidir.
 - Eklenen her yeni kod parçası ve özellik, projenin mevcut yazılım mimarisine, frontend kart ve tasarım standartlarına ve backend servis mimarisine tam uyumlu olmalıdır.
 - Bir bilginin geçici mi kalıcı mı olduğu belirsizse bağlama eklemeden önce kullanıcıya sor.
 - Geçici konuşmaları, reddedilmiş seçenekleri ve doğrulanmamış varsayımları kalıcı bağlam olarak kaydetme.
@@ -87,7 +87,7 @@ Bu dosya projenin ana ve kalıcı çalışma talimatlarını içerir. Claude Cod
 
 ### Mimari yönetişim ve C4 modeli güncelleme protokolü
 - Projeye eklenecek her kod parçası ve yeni özellik, projenin mevcut yazılım mimarisine (frontend 5 adımlı standart kart mimarisi, backend FastAPI router/service yapısı, Remotion video render hattı) tam uyumlu şekilde geliştirilmelidir.
-- Yeni bir özellik veya akış eklendiğinde `context/mimari/c4-modeli.md` dosyasındaki ilgili C4 seviyesi (C1 Context, C2 Container, C3 Component veya C4 Code) güncellenerek hafıza şablonuna işlenmelidir. Gelecekteki tüm geliştirmeler bu kurallara göre ilerleyecektir.
+- Yeni bir özellik veya akış eklendiğinde `context/mimari/c4-modeli.xml` dosyasındaki ilgili C4 seviyesi (C1 Context, C2 Container, C3 Component veya C4 Code) XML formatında güncellenerek hafıza şablonuna işlenmelidir. C4 modeli daima XML diliyle tutulacak ve gelecekteki tüm geliştirmeler bu kurallara göre ilerleyecektir.
 
 ### Komutlar ve ortam
 - Host ortamında Node.js kurulu değildir; tüm frontend ve backend komutları `kuran-video/` dizininde Docker Compose üzerinden yürütülmelidir:

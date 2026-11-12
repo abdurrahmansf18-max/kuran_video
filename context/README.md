@@ -24,7 +24,7 @@ Bu dosya `context/` klasörünün ana haritasıdır. Proje bağlamını tek baş
 | `hedefler.md` | Aktif hedefler, öncelikler ve başarı ölçütleri | Planlama ve önceliklendirmede |
 | `kurallar-ve-sinirlar.md` | Kalıcı kurallar, sınırlar, yasaklar ve yetki gerektiren alanlar | Her görevde |
 | `kararlar.md` | Kesinleşmiş kararlar, gerekçeleri ve durumları | Karar veya değişiklik öncesinde |
-| `mimari/c4-modeli.md` | C1-C4 Seviyelerinde sistem mimarisi ve bileşen şemaları | Mimari inceleme ve geliştirme süreçlerinde |
+| `mimari/c4-modeli.xml` | C1-C4 Seviyelerinde XML formatında sistem mimarisi, bileşen şemaları ve akışlar | Mimari inceleme ve geliştirme süreçlerinde |
 | `kaynaklar/README.md` | Kaynak sisteminin kullanım ve düzenleme kuralları | Kaynak işlemlerinde |
 | `kaynaklar/kaynak-indeksi.md` | Projede bulunan gerçek kaynakların envanteri | Kanıt veya kaynak aranırken |
 | `kaynaklar/baglantilar.md` | İnternet ve çevrim içi kaynak kayıtları | Dış bağlantı gerektiğinde |
